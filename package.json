@@ -8,36 +8,6 @@
         "start": "node src/index.js"
 
     },
-    "build": {
-        "appId": "Consultorios",
-        "asar": true,
-        "dmg": {
-            "contents": [{
-                    "x": 110,
-                    "y": 150
-                },
-                {
-                    "x": 240,
-                    "y": 150,
-                    "type": "link",
-                    "path": "/Applications"
-                }
-            ]
-        },
-        "linux": {
-            "target": [
-                "AppImage",
-                "deb"
-            ]
-        },
-        "win": {
-            "target": "NSIS",
-            "icon": "build/icono.ico"
-        }
-    },
-    "keywords": [],
-    "author": "utn",
-    "license": "MIT",
     "dependencies": {
         "@trodi/electron-splashscreen": "^0.3.4",
         "body-parser": "^1.18.3",

@@ -54,6 +54,7 @@ module.exports = app => {
             if (err) {
                 console.log(err);
             };
+            console.log(eventos);
             res.json(eventos);
         })
     })

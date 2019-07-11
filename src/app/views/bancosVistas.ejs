@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <% include ./partials/header %>
+
+        <title>Bancos</title>
+</head>
+
+<body>
+    <%include ./partials/menu %>
+
+        <div class="contenido abrir">
+
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <div class="navbar-brand">Bancos</div>
+            </nav>
+            <% include ./partials/message %>
+                <i id="menu-bar" class="fas fa-bars m-2 fa-2x"></i>
+
+                <div class="container">
+                    <div class="row mb-3">
+                        <a href="/bancos/agregar" class="btn btn-primary">Agregar Banco</a>
+                    </div>
+
+                    <div class="table-responsive col-md-10">
+                        <table id="tabla_bancos" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</td>
+                                        <th>Nombre</th>
+                                        <th>Teléfono</th>
+                                        <th>Email</th>
+                                        <th>Editar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(var i = 0; i < bancos.length; i++){ %>
+                                    <tr>
+                                        <td>
+                                            <%= i+1 %>
+                                        </td>
+                                        <td>
+                                            <%= bancos[i].nombreBanco %>
+                                        </td>
+                                        <td>
+                                            <%= bancos[i].telefonoBanco %>
+                                        </td>
+                                        <td>
+                                            <%= bancos[i].emailBanco %>
+                                        </td>
+                                        <td>
+                                            <a href="/bancos/edit/<%=bancos[i].idBanco %>" role="button" class="btn btn-secondary btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+
+
+                                        </td>
+
+                                    </tr>
+                                    <% } %>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>#</td>
+                                        <th>Nombre</th>
+                                        <th>Teléfono</th>
+                                        <th>Email</th>
+                                        <th>Editar</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+        </div>
+
+
+        </div>
+
+        <script>
+            $(document).ready(() => {
+                $('#tabla_bancos').DataTable({
+                    "language": {
+                        "lengthMenu": "Mostrar _MENU_ Registros por página",
+                        "zeroRecords": "No se encontraron resultados en su búsqueda.",
+                        "searchPlaceholder": "Buscar Banco",
+                        "info": "Mostrando registros del _START_ al _END_ de un total de _MAX_",
+                        "infoEmpty": "No existen registros.",
+                        "infoFiltered": "(Filtrado de un total de _MAX_ registros",
+                        "search": "Buscar:",
+                        "paginate": {
+                            "fist": "Primero",
+                            "last": "Último",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    },
+
+                    "columnDefs": [{
+                        "className": "dt-center",
+                        "targets": "_all"
+                    }],
+                });
+            })
+        </script>
+
+        <script src="/js/abrirMenu.js"></script>
+
+</body>

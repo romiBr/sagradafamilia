@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <% include ./partials/header %>  
+    
+
+    <title>Doctores</title>
+</head>
+<body>
+    <%include ./partials/menu %>
+
+    <div class="contenido abrir">     
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="navbar-brand">Doctores</div>
+        </nav>
+       
+        <% include ./partials/message %>
+        
+        <i id="menu-bar" class="fas fa-bars mt-2 fa-2x"></i>    
+        <div class="container">
+        <%if(user.rol=='director'){%>
+            <div class="row">
+                <a href="/doctores/agregar" class="btn btn-primary">Agregar Doctor</a>
+            </div>
+        <%}%>
+            
+            <div class="row mt-2">
+                <div class="col-10">
+                    <table id="tabla_doctores" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</td>
+                                <th>Doctor</th>                         
+                                <th>Especialidad</th>
+                                <th>E-mail</th>
+                                <th>Matrícula</th>                          
+                                <th>Editar</th>                           
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(var i = 0; i < doctores.length; i++){ %>
+                                <%if(doctores[i].baja==1){%>
+                                    <tr style='color: red'>
+                                <%}else{%>
+                                    <tr>
+                                <%}%>
+                                    <td>
+                                        <%= i+1 %>
+                                    </td>                               
+                                    <td>
+                                        <%= doctores[i].apellidoDoctor%> <%= doctores[i].nombreDoctor%> 
+                                    </td>
+                                    <td>
+                                        <%= doctores[i].nombreEspecialidad%> 
+                                    </td>
+                                    <td>
+                                        <%= doctores[i].emailDoctor%> 
+                                    </td>
+                                    <td>
+                                        <%= doctores[i].matriculaDoctor%> 
+                                    </td>                                
+                                    <td>
+                                        <%if(user.rol == 'director'){%>
+                                            <a href="/doctores/edit/<%=doctores[i].idDoctor %>" role="button" class="btn btn-secondary btn-sm" >
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            
+                                        <%}%>                                       
+
+                                        <%if(user.rol != 'director'){%>
+                                            ---
+                                        <%}%> 
+                                        
+                                    </td>                         
+                                
+                                </tr>
+                            <% } %>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</td>
+                                <th>Doctor</th>                         
+                                <th>Especialidad</th>
+                                <th>E-mail</th>
+                                <th>Matrícula</th>                          
+                                <th>Editar</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="doctoresModal" tabindex="-1" role="dialog" aria-labelledby="doctoresModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="doctoresModalLabel">Agregar Doctor</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/doctores" method="post" class="card-body">                        
+                            <div class="form-group">
+                                <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <select class="custom-select" name='especialidad' id="especialidadesGroup">
+                                            
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="matricula" name="matricula" class="form-control" placeholder="Nº de matrícula" required>
+                            </div>
+                                
+                            <div class="modal-footer">                        
+                                <input type="submit" value="Aceptar" id="Aceptar" class="btn btn-primary">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+    </div>   
+
+
+    <a href="/" role="button">Inicio</a><br>
+
+    <script>
+        $(document).ready(()=>{
+            $('#tabla_doctores').DataTable({
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ Registros por página",
+                    "zeroRecords": "No se encontraron resultados en su búsqueda.",
+                    "searchPlaceholder": "Buscar Doctor",
+                    "info": "Mostrando registros del _START_ al _END_ de un total de _MAX_",
+                    "infoEmpty": "No existen registros.",
+                    "infoFiltered": "(Filtrado de un total de _MAX_ registros",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "fist": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+
+                "columnDefs": [
+                    {"className": "dt-center", "targets": "_all"}
+                ],
+            });
+            
+            $('#doctoresModal').on('shown.bs.modal', function () {
+                $('#apellido').trigger('focus')
+            });
+
+            $('.agregar').click(()=>{
+                $.ajax({
+                    url: '/doctores/agregar',
+                    success: function(especialidades){
+                        let select = $('#especialidadesGroup');
+                        select.html('');
+                        select.append(`
+                            <option selected>Especialidad...</option> 
+                        `)
+                        especialidades.forEach(especialidad => {
+                            select.append(`                                
+                                <option value=${especialidad.idEspecialidad}>${especialidad.nombreEspecialidad}</option>
+                            `)
+                        })
+                    }
+                })
+                $('#doctoresModal').modal('show');
+            });
+
+            $('#Aceptar').click(()=>{
+                var opcionSelect = $('#especialidadesGroup option: selected');
+                console.log(opcionSelect);
+            })
+
+            
+            
+        })
+
+        
+    </script>
+    <script src="/js/abrirMenu.js"></script>
+</body>
+</html>

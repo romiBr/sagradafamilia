@@ -1,0 +1,313 @@
+
+    <% include ./header %> 
+    <link rel="stylesheet" href="/css/fullcalendar.min.css">    
+    <script src="/js/fullcalendar.min.js"></script> 
+    <script src="/js/es.js"></script> 
+    
+
+    <title>Agregar Turno</title>
+</head>
+<body>
+    <!--<%include ./menu %>-->
+
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="navbar-brand">Agregar Turno</div>
+        </nav>
+        <br>
+        
+        <div class="container col-6">
+            <br><br>
+            <div class="card">
+                <br>
+                <div class="card-body">
+                    <form action="" method="post">
+                        
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Paciente" disabled required>
+                            <div class="input-group-append">
+                                <a href="#" class="btn btn-outline-primary" id="botonModal1" role="button" data-toggle="modal" data-target="#pacienteModal">...</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Aceptar" class="btn btn-primary">
+                            <a href="/turnos" role="button" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+
+
+                    <!-- Modal 1 -->
+                    <div class="modal fade" data-backdrop="static" id="pacienteModal" tabindex="-1" role="dialog" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="pacienteModalLabel">Seleccionar Paciente</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                
+                                <div class="container">
+                                    <div class="row">
+                                        <input type='button' class="btn btn-primary agregar" id="botonModal2" data-toggle="modal" data-target="#pacienteAgregarModal" value='Agregar Paciente'>
+                                        <!--<button class="btn btn-primary" data-toggle="modal" data-target="#pacientesModal">Agregar Paciente</button>-->
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="container">
+                                            <table id="tabla_pacientes" class="table  table-striped table-responsive">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</td>
+                                                        <th>Apellido</th>                     
+                                                        <th>Nombre</th>
+                                                        <th>DNI</th>
+                                                        <th>Obra Social</th>
+                                                        <th>Teléfono</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbody">
+                                                    
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>#</td>
+                                                        <th>Apellido</th>                     
+                                                        <th>Nombre</th>
+                                                        <th>DNI</th>
+                                                        <th>Obra Social</th>
+                                                        <th>Teléfono</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal 2 -->
+                    <div class="modal fade" data-backdrop="static" id="pacienteAgregarModal" role="dialog" aria-labelledby="pacienteAgregarModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="pacienteAgregarModalLabel">Agregar Paciente</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="card">
+                                    
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-row">
+                                                    <div class="col">
+                                                        <input type="number" id="dni" name="dni" class="form-control" placeholder="Documento" required>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="date" id="fNac" name="fNac" class="form-control" placeholder="Fecha Nacimiento" required>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="phone" id="telefono" name="telefono" class="form-control" placeholder="Teléfono" required>
+                                        </div>
+                                                    
+                                        <div class="form-group">
+                                            <input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required>
+                                        </div>
+                                                    
+                                        <div class="form-group">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <select style="width:250px" class="form-control" name='obrasSociales[]' id="obrasSocialesGroup" multiple="multiple" required>
+                                                                    
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <input type="text" id="nroAfil" name="nroAfil" class="form-control" placeholder="Nº Afiliado" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" id="AceptarAgregar">Aceptar</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="/js/abrirMenu.js"></script>
+<script>
+    function cargarPacientes(pacientes){
+        var body = $('#tbody');
+        var i=1;
+                    pacientes.forEach(paciente=>{
+                        body.append(`
+                            <tr>
+                                <td>
+                                    ${i}
+                                </td>
+                                <td>
+                                    ${paciente.apellidoPaciente}
+                                </td>
+                                <td>
+                                    ${paciente.nombrePaciente}
+                                </td>
+                                <td>
+                                    ${paciente.dniPaciente}
+                                </td>
+                                <td>
+                                    ${paciente.nombreObraS}
+                                </td>
+                                 <td>
+                                    ${paciente.telefonoPaciente}
+                                </td>
+                                <td>
+                                    <a href="#" id="modificar" role="button" class="btn btn-secondary btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    
+                                    <a href="/turnos/seleccionar/${paciente.id}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check-square"></i>
+                                    </a>
+                                    
+                                </td>                         
+                            
+                            </tr>
+                        `);
+                        i++;
+                    });
+                    $('#tabla_pacientes').DataTable({
+                        "language": {
+                            "lengthMenu": "Mostrar _MENU_ Registros por página",
+                            "zeroRecords": "No se encontraron resultados en su búsqueda.",
+                            "searchPlaceholder": "Buscar Paciente",
+                            "info": "Mostrando registros del _START_ al _END_ de un total de _MAX_",
+                            "infoEmpty": "No existen registros.",
+                            "infoFiltered": "(Filtrado de un total de _MAX_ registros",
+                            "search": "Buscar:",
+                            "paginate": {
+                                "fist": "Primero",
+                                "last": "Último",
+                                "next": "Siguiente",
+                                "previous": "Anterior"
+                            }
+                        },
+
+                        dom: 'Bfrtip',
+                        select: false,    
+                        pageLength: 4                    
+                
+                    });
+    }
+</script>
+<script>
+    $(document).ready(()=>{
+        
+        $('#botonModal1').click(()=>{
+            $('#tabla_pacientes').DataTable().clear();
+            $('#tabla_pacientes').DataTable().destroy();
+            $.ajax({
+                url: '/turnos/pacientes',                
+                success: (pacientes)=>{
+                    cargarPacientes(pacientes);           
+
+                    
+                }
+            });
+            
+            $('#pacienteModal').modal('show');
+        });
+
+        $('#botonModal2').click(()=>{            
+            
+            $.ajax({
+                url: '/pacientes/obrassociales',
+                success: (obrassociales)=>{
+                    $('#obrasSocialesGroup').select2({
+                        placeholder: 'Seleccionar obras Sociales...',
+                        theme: 'bootstrap4',
+                        dropdownParent: $('#pacienteAgregarModal')
+                    });
+                    let select = $('#obrasSocialesGroup');                
+                        obrassociales.forEach(obraSocial => {
+                            select.append(`                                
+                                <option value=${obraSocial.idObraS}>${obraSocial.nombreObraS}</option>
+                            `)
+                        })
+                }
+            });
+            $('#pacienteAgregarModal').modal('show',()=>{
+                $('#apellido').trigger('focus');
+
+            });
+        });
+        
+        $('#AceptarAgregar').click(()=>{
+            $.ajax({
+                url: '/turnos/pacientes',
+                success: ()=>{
+                        $('#pacienteModal').on('hidden.bs.modal', function (e) {
+                            $(this).removeData('bs.modal');
+                            $(this).find('#pacienteModal').empty();
+                        });
+                        $.ajax({
+                            url: '/pacientes/obrassociales',
+                            success: (obrassociales)=>{
+                                $('#obrasSocialesGroup').select2({
+                                    placeholder: 'Seleccionar obras Sociales...',
+                                    theme: 'bootstrap4',
+                                    dropdownParent: $('#pacienteAgregarModal')
+                                });
+                                let select = $('#obrasSocialesGroup');                
+                                    obrassociales.forEach(obraSocial => {
+                                        select.append(`                                
+                                            <option value=${obraSocial.idObraS}>${obraSocial.nombreObraS}</option>
+                                        `)
+                                    })
+                            }
+                        });
+                        $('#pacienteAgregarModal').modal('toggle');
+                }
+            })
+        })
+
+        
+    })
+</script>
+</body>
+</html>

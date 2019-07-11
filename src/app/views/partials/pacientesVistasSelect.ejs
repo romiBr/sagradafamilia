@@ -1,0 +1,215 @@
+
+    <% include ./header %>  
+    
+
+    <title>Seleccionar Pacientes</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="navbar-brand">Seleccionar Pacientes</div>
+    </nav>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+            <input type='button' class="btn btn-primary agregar" value='Agregar Paciente'>
+            <!--<button class="btn btn-primary" data-toggle="modal" data-target="#pacientesModal">Agregar Paciente</button>-->
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="container">
+                <table id="tabla_pacientes" class="table  table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</td>
+                            <th>Apellido</th>                     
+                            <th>Nombre</th>
+                            <th>DNI</th>
+                            <th>Obra Social</th>
+                            <th>Nº Afiliado</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            for(var i = 0; i < pacientes.length; i++){ %>
+                            <tr>
+                                <td>
+                                    <%= i+1 %>
+                                </td>
+                                <td>
+                                    <%= pacientes[i].apellidoPaciente %>
+                                </td>
+                                <td>
+                                    <%= pacientes[i].nombrePaciente %>
+                                </td>
+                                <td>
+                                    <%= pacientes[i].dniPaciente %>
+                                </td>
+                                <td>
+                                    <%= pacientes[i].nombreObraS %>
+                                </td>
+                                 <td>
+                                    <%= pacientes[i].numeroAfiliado %>
+                                </td>
+                                 <td>
+                                    <%= pacientes[i].telefonoPaciente %>
+                                </td>
+                                <td>
+                                    <a href="/pacientes/edit/<%=pacientes[i].id %>" id="modificar" role="button" class="btn btn-secondary btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    
+                                    <a href="/pacientes/select/<%=pacientes[i].id %>" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check-square"></i>
+                                    </a>
+                                    
+                                </td>                         
+                            
+                            </tr>
+                        <% }
+                        %>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>#</td>
+                            <th>Apellido</th>                     
+                            <th>Nombre</th>
+                            <th>DNI</th>
+                            <th>Obra Social</th>
+                            <th>Nº Afiliado</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar -->
+    <div class="modal fade" id="pacientesModal" tabindex="-1" role="dialog" aria-labelledby="pacientesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pacientesModalLabel">Agregar Paciente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    
+                    <form action="/pacientes" method="post" class="card-body">
+                        <div class="form-group">
+                            <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col">
+                                    <input type="number" id="dni" name="dni" class="form-control" placeholder="Documento" required>
+                                </div>
+                                <div class="col">
+                                    <input type="date" id="fNac" name="fNac" class="form-control" placeholder="Fecha Nacimiento" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="phone" id="telefono" name="telefono" class="form-control" placeholder="Teléfono" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="col">
+                                    <select class="custom-select" name='obraSoc' id="obrasSocialesGroup">
+                                        
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <input type="text" id="nroAfil" name="nroAfil" class="form-control" placeholder="Nº Afiliado" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                            
+                        <div class="modal-footer">                        
+                            <input type="submit" value="Aceptar" id="Aceptar" class="btn btn-primary">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+    
+
+    <a href="/">Inicio</a>
+    
+    <script>
+        $(document).ready(()=>{
+            $('#tabla_pacientes').DataTable({
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ Registros por página",
+                    "zeroRecords": "No se encontraron resultados en su búsqueda.",
+                    "searchPlaceholder": "Buscar Paciente",
+                    "info": "Mostrando registros del _START_ al _END_ de un total de _MAX_",
+                    "infoEmpty": "No existen registros.",
+                    "infoFiltered": "(Filtrado de un total de _MAX_ registros",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "fist": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+
+                dom: 'Bfrtip',
+                select: true,
+                
+                
+            });
+
+            var table = $('#tabla_pacientes').DataTable();
+            
+            console.log(table.rows( { selected: true } ).data());
+            
+            $('#pacientesModal').on('shown.bs.modal', function () {
+                $('#apellido').trigger('focus')
+            });
+
+            $('.agregar').click(()=>{
+                $.ajax({
+                    url: '/pacientes/agregar',
+                    success: function(obrassociales){
+                        let select = $('#obrasSocialesGroup');
+                        select.html('');
+                        select.append(`
+                            <option selected>Obra Social...</option> 
+                        `)
+                        obrassociales.forEach(osocial => {
+                            select.append(`                                
+                                <option value=${osocial.idObraS}>${osocial.nombreObraS}</option>
+                            `)
+                        })
+                    }
+                })
+                $('#pacientesModal').modal('show');
+            })
+            
+            
+        })
+
+        
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <% include ./partials/header %>  
+
+    <title>Consultorios Sagrada Familia</title>
+</head>
+
+<body>
+    <%include ./partials/menu %>
+
+    <div class="contenido abrir">
+        <i id="menu-bar" class="fas fa-bars fa-2x"></i>
+        <div class="container">
+            <div class="offset-2 animated slideInLeft">
+                <!--<% if (isAuthenticated){ 
+                        if(user.rol == 'doctor'){
+                            if(user.sexo == 'm'){%>
+                                <h4>Bienvenido Dr. <%=user.name%></h4>
+                            <%}else{%>
+                                <h4>Bienvenida Dra. <%=user.name%></h4>
+                            <%} %>
+                        <%} else if(user.sexo == 'm'){ %>
+
+                            <h4>Bienvenido  <%=user.name%></h4> 
+                        <%}else{%>
+                            <h4>Bienvenida  <%=user.name%></h4> 
+                <%}
+            }%> -->
+            <h3>CONSULTORIOS SAGRADA FAMILIA</h3>
+            </div>           
+            <div class="row">
+                <div class="offset-2">
+                    <img class="animated flip" src="/img/logo.png">
+                </div>
+            </div>
+            
+            
+        </div>
+        
+    </div>
+
+    <script src="/js/abrirMenu.js"></script>
+</body>
+
+</html>

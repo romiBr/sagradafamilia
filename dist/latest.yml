@@ -1,0 +1,8 @@
+version: 1.0.0
+files:
+  - url: sagradafamilia-setup-1.0.0.exe
+    sha512: 8ufT+QVG66E+Rwv0l77/vK4X0l5d1Ff5mKwPy0GK+OjwkSoC+dv66xMH6eM92ovsFovjE6i95yua2m/qmHNVnQ==
+    size: 39484307
+path: sagradafamilia-setup-1.0.0.exe
+sha512: 8ufT+QVG66E+Rwv0l77/vK4X0l5d1Ff5mKwPy0GK+OjwkSoC+dv66xMH6eM92ovsFovjE6i95yua2m/qmHNVnQ==
+releaseDate: '2019-03-16T02:08:25.489Z'

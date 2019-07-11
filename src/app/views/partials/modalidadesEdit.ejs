@@ -1,0 +1,94 @@
+<% include ./header %>
+    <title>Modificar Modalidad de Pago</title>
+</head>
+
+<body>
+    <%include ./menu %>
+    <div class="contenido abrir">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container navbar-brand">Modificar Modalidad de Pago
+        </div>
+    </nav>
+    
+    <i id="menu-bar" class="fas fa-bars fa-2x m-2"></i>
+    
+    <div class="col-7">
+        
+        <div class="card m-2 pt-3">
+            
+            <div class="card-body">
+                    <input type="hidden" id="idMod" value="<%=modalidades.idModalidad %>">
+                    <input type="hidden" id="activ" value="<%=modalidades.activa%>">
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" value="<%= modalidades.nombreModalidad %>" class="form-control col-7" required>
+                    </div>
+                    <div class="form-check mt-2 offset-3">
+                        <input class="form-check-input" type="radio" name="modactiva" id="modactiva1" value="0">
+                            <label class="form-check-label" for="modactiva1">
+                                Activa
+                            </label>
+                        </div>
+                        <div class="form-check offset-3">
+                            <input class="form-check-input" type="radio" name="modactiva" id="modactiva2" value="1">
+                            <label class="form-check-label" for="modactiva2">
+                                Inactiva
+                            </label>
+                        </div>                        
+                    </div>
+                    
+                    <div class="form-group m-3">
+                        <button class="btn btn-primary mr-2" id="modificar">Modificar</button>
+                        <a href="/modalidades" role="button" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="/js/abrirMenu.js"></script>
+<script>
+    $(document).ready(()=>{
+        $('#nombre').focus();
+
+        var id = $('#idMod').val();
+        var act = $('#activ').val();
+
+        if(act == 0){
+            $('#modactiva1').prop("checked", true);
+        }else{
+            $('#modactiva2').prop("checked", true);
+        }
+
+        var acti;        
+
+        $('#modificar').click(()=>{
+            if($('#modactiva1').is(':checked')){                
+                acti = 0;
+            }else{
+                acti = 1;
+            };
+            var datos = {
+                nombre: $('#nombre').val(),
+                modactiva: acti
+            };
+
+            $.ajax({
+                type: 'post',
+                data: datos,
+                url: '/modalidades/edit/'+id,
+                success: (resul) => {
+                    if(resul){
+                        window.location.href = "/modalidades";
+                    }
+                }
+            })
+
+        });
+
+        
+    })
+</script>
+</body>
+</html>

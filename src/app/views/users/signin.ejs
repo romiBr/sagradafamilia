@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <% include ../partials/header %>  
+    
+
+    <title>Login</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <div class="navbar-brand">Iniciar Sesión</div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="row m-5">
+            <div class="col-6 offset-3">
+                <!--<% if(message.length > 0){ %>
+                    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <%= message %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <%}
+                %>-->
+                <div class="card animated pulse">
+                    <div class="card-header">Iniciar Sesión</div>
+                    <div class="card-body">
+                        <form action="/auth/signin" method="post" autocomplete="off">
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" name="username" id="email" placeholder="Email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Contraseña:</label>
+                                <input type="password" name="password" id="password" placeholder="Contraseña" class="form-control" required>
+                            </div>
+                            <button type="sumit" class="btn btn-primary">Iniciar Sesión</button>
+                        </form>
+                    </div>                    
+
+                </div>
+                <% if(authmessage.length > 0){ %>
+                        <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+                            <%= authmessage %>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <%}
+                    %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(()=>{
+            $('#email').focus();
+        })
+    </script>
+
+</body>
+
+</html>

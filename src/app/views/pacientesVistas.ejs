@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <% include ./partials/header %>  
+    
+
+    <title>Pacientes</title>
+</head>
+<body>
+    <%include ./partials/menu %>
+
+    
+    <div class="contenido abrir">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="navbar-brand">Pacientes</div>
+        </nav>
+        <% include ./partials/message %>
+        <i id="menu-bar" class="fas fa-bars mt-2 fa-2x"></i>
+        <div class="container">
+            <%if(isAuthenticated && user.rol != 'doctor'){%>
+                <div class="row">
+                    <a href="/pacientes/agregar" class="btn btn-primary">Agregar Paciente</a>                    
+                </div>
+            <%}%>
+
+            
+            
+            <div class="row mt-3">
+                <div class="col-10">
+                    <table id="tabla_pacientes" class="table  table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</td>
+                                <th>Apellido</th>                     
+                                <th>Nombre</th>
+                                <th>DNI</th>
+                                <th>Obra Social</th>
+                                <th>Teléfono</th>
+                                <th>E-mail</th>  
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%
+                                for(var i = 0; i < pacientes.length; i++){ %>
+                                <tr>
+                                    <td>
+                                        <%= i+1 %>
+                                    </td>
+                                    <td>
+                                        <%= pacientes[i].apellidoPaciente %>
+                                    </td>
+                                    <td>
+                                        <%= pacientes[i].nombrePaciente %>
+                                    </td>
+                                    <td>
+                                        <%= pacientes[i].dniPaciente %>
+                                    </td>
+                                    <td>
+                                        <%= pacientes[i].nombreObraS %>
+                                    </td>
+                                    <td>
+                                        <%= pacientes[i].telefonoPaciente %>
+                                    </td>
+                                    <td>
+                                        <%= pacientes[i].emailPaciente %>
+                                    </td>
+                                    
+                                    <td>
+                                    <%if(user.rol!='doctor'){%>
+                                        <a href="/pacientes/edit/<%=pacientes[i].id %>" id="modificar" role="button" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>                                       
+                                        
+                                    <%}%>                                       
+                                    <%if(user.rol == 'doctor'){%>
+                                        ---
+                                    <%}%>    
+                                        
+                                    </td>                         
+                                
+                                </tr>
+                            <% }
+                            %>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</td>
+                                <th>Apellido</th>                     
+                                <th>Nombre</th>
+                                <th>DNI</th>
+                                <th>Obra Social</th>
+                                <th>Teléfono</th>
+                                <th>E-mail</th>                                
+                                <th>Editar</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Agregar -->
+        <div class="modal fade" id="pacientesModal" tabindex="-1" role="dialog" aria-labelledby="pacientesModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pacientesModalLabel">Agregar Paciente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <form action="/pacientes" method="post" class="card-body">
+                            <div class="form-group">
+                                <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col">
+                                        <input type="number" id="dni" name="dni" class="form-control" placeholder="Documento" required>
+                                    </div>
+                                    <div class="col">
+                                        <input type="date" id="fNac" name="fNac" class="form-control" placeholder="Fecha Nacimiento" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="phone" id="telefono" name="telefono" class="form-control" placeholder="Teléfono" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="form-row">
+                                    <div class="col">
+                                        <select class="custom-select" name='obraSoc' id="obrasSocialesGroup">
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" id="nroAfil" name="nroAfil" class="form-control" placeholder="Nº Afiliado" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                
+                            <div class="modal-footer">                        
+                                <input type="submit" value="Aceptar" id="Aceptar" class="btn btn-primary">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(()=>{
+            $('#tabla_pacientes').DataTable({
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ Registros por página",
+                    "zeroRecords": "No se encontraron resultados en su búsqueda.",
+                    "searchPlaceholder": "Buscar Paciente",
+                    "info": "Mostrando registros del _START_ al _END_ de un total de _MAX_",
+                    "infoEmpty": "No existen registros.",
+                    "infoFiltered": "(Filtrado de un total de _MAX_ registros",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "fist": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+            });
+            
+            $('#pacientesModal').on('shown.bs.modal', function () {
+                $('#apellido').trigger('focus')
+            });
+
+            $('.agregar').click(()=>{
+                $.ajax({
+                    url: '/pacientes/agregar',
+                    success: function(obrassociales){
+                        let select = $('#obrasSocialesGroup');
+                        select.html('');
+                        select.append(`
+                            <option selected>Obra Social...</option>
+                        `)
+                        obrassociales.forEach(osocial => {
+                            select.append(`                                
+                                <option value=${osocial.idObraS}>${osocial.nombreObraS}</option>
+                            `)
+                        })
+                    }
+                })
+                $('#pacientesModal').modal('show');
+            });
+
+            /*var rol = $('#rol').val();
+            if(rol == 'secretaria'){
+                 $('.eliminar').hide();
+            }*/
+            
+            
+        })
+
+        
+    </script>
+    <script src="/js/abrirMenu.js"></script>
+</body>
+</html>

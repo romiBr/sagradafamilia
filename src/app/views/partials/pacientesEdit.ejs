@@ -1,0 +1,112 @@
+
+    <% include ./header %>
+    <title>Modificar Paciente</title>
+</head>
+
+<body>
+    <%include ./menu %>
+    <div class="contenido abrir">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container navbar-brand">Modificar Paciente
+        </div>
+    </nav>
+    <br>
+    <i id="menu-bar" class="fas fa-bars fa-2x"></i>
+    <div class="container col-6">
+        <br><br>
+        <div class="card">
+            <br>
+            <div class="card-body">
+                <form action="/pacientes/edit/<%=pacientes[0].id %>" method="post">
+                    
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Apellido:</label>
+                        <input type="text" name="apellido" value="<%= pacientes[0].apellidoPaciente %>" class="form-control col-7" required>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Nombre:</label>
+                        <input type="text" name="nombre" value="<%= pacientes[0].nombrePaciente %>" class="form-control col-7" required>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">DNI:</label>
+                        <input type="number" id="dni" name="dni" value="<%=pacientes[0].dniPaciente %>" class="form-control col-7" required>  
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">F. Nacimiento:</label>
+                        <input id="fNac" name="fNac" value="<%=pacientes[0].fNacPaciente %>" class="form-control col-7" required>                    
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Domicilio:</label>
+                        <input type="text" id="direccion" name="direccion" value="<%= pacientes[0].domicilioPaciente%>" class="form-control col-7" required>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Teléfono:</label>
+                        <input type="phone" id="telefono" name="telefono" value="<%= pacientes[0].telefonoPaciente%>" class="form-control col-7" required>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">E-mail:</label>
+                        <input type="email" id="email" name="email" value="<%= pacientes[0].emailPaciente%>" class="form-control col-7" required>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Obra Social:</label>
+                        <select class="form-control col-7" name="obrasSociales[]" id="obrasSocialesGroup" multiple="multiple" required>
+                            <% for(var i=0; i< pacientes.length; i++){ %>
+                                <option selected value=<%=pacientes[i].idObraS %>><%= pacientes[i].nombreObraS %></option>
+                            <%}%>                            
+                        </select>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Nro. Afiliado:</label>
+                        <input type="number" id="nroAfil" name="nroAfil" value="<%=pacientes[0].numeroAfiliado%>" class="form-control col-7" required>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                        <input type="submit" value="Modificar" class="btn btn-primary">
+                        <a href="/pacientes" role="button" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(()=>{
+        $.ajax({
+            url: '/pacientes/edit',
+            success: (obrasSociales)=>{
+                $('#obrasSocialesGroup').select2({
+                    theme: 'bootstrap4'
+                })
+                let select = $('#obrasSocialesGroup');  
+                let obraSocSelect = $('#obrasSocialesGroup').val();              
+                obrasSociales.forEach(obraSocial => {
+                    let aux = obraSocial.idObraS.toString();
+                    if(!(obraSocSelect.includes(aux))){
+                        select.append(`                                
+                        <option value=${obraSocial.idObraS}>${obraSocial.nombreObraS}</option>
+                        `)
+                    }
+                
+                })
+            }
+        });
+
+        var usedNames = {};
+        $("select > option").each(function () {
+            if (usedNames[this.value]) {
+                $(this).remove();
+            } else {
+                usedNames[this.value] = this.text;
+            }
+        }); 
+
+        $('#fNac').datepicker({
+            
+        })
+
+    })
+</script>
+<script src="/js/abrirMenu.js"></script>
+</body>
+</html>

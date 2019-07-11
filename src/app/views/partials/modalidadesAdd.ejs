@@ -1,0 +1,43 @@
+<% include ./header %>
+    <title>Agregar Modalidad de Pago</title>
+</head>
+
+<body>
+    <%include ./menu %>
+    <div class="contenido abrir">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container navbar-brand">Agregar Modalidad de Pago
+        </div>
+    </nav>
+    
+    <i id="menu-bar" class="fas fa-bars fa-2x m-2"></i>
+    
+    <div class="col-7">
+        
+        <div class="card m-2 pt-3">
+            
+            <div class="card-body">
+                <form action="/modalidades" method="post">
+                    <div class="form-group row">
+                        <div class="col-2"></div>
+                        <input type="text" name="nombre" id="nombre" class="form-control col-8" placeholder="Nombre" required>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-2"></div>
+                        <input type="submit" value="Agregar" class="btn btn-primary mr-2">
+                        <a href="/modalidades" role="button" class="btn btn-secondary mr-2">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="/js/abrirMenu.js"></script>
+<script>
+    $(document).ready(()=>{
+        $('#nombre').focus();
+    })
+</script>
+</body>
+</html>

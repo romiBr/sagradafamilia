@@ -1,0 +1,43 @@
+<% include ./header %>
+
+    <title>Modificar Especialidad</title>
+</head>
+
+<body>
+    <%include ./menu %>
+    <div class="contenido abrir">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container navbar-brand">Modificar Especialidad
+        </div>
+    </nav>
+    <br>
+    <i id="menu-bar" class="fas fa-bars fa-2x"></i>
+    <br>
+    <div class="col-7">
+        <br><br>
+        <div class="card">
+            <br>
+            <div class="card-body">
+                <form action="/especialidades/edit/<%=especialidades.idEspecialidad %>" method="post">
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label">Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" value="<%= especialidades.nombreEspecialidad %>" class="form-control col-7" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Modificar" class="btn btn-primary">
+                        <a href="/especialidades" role="button" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/abrirMenu.js"></script>
+<script>
+    $(document).ready(()=>{
+        $('#nombre').focus();
+    })
+</script>
+</body>
+</html>

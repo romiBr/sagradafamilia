@@ -1,0 +1,367 @@
+<% include ./header %>
+
+    <title>Modificar Doctor</title>
+    </head>
+
+    <body>
+        <%include ./menu %>
+            <div class="contenido abrir">
+
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container navbar-brand">Modificar Doctor
+                    </div>
+                </nav>
+                <br>
+                <i id="menu-bar" class="fas fa-bars fa-2x"></i>
+                <br>
+
+                <div class="col-offset-2 col-7">
+                    <br><br>
+                    <form>
+                        <div class="card">
+                            <br>
+
+                            <div class="card-body">
+
+                                <input type="hidden" id="idDoc" value="<%=doctores[0].idDoctor %>">
+                                <input type="hidden" id="sex" value="<%=doctores[0].sexoDoctor%>">
+                                <input type="hidden" id="activ" value="<%=doctores[0].baja%>">
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Apellido:</label>
+                                    <input type="text" name="apellido" id="apellido" value="<%= doctores[0].apellidoDoctor %>" class="form-control col-7" required data-toggle="popover" data-container="body" data-content="Ingresar apellido.">
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-3 col-form-label">Nombre:</label>
+                                    <input type="text" name="nombre" id="nombre" value="<%= doctores[0].nombreDoctor %>" class="form-control col-7" required data-toggle="popover" data-container="body" data-content="Ingresar nombre.">
+                                </div>
+                                <div class="form-group row">
+                                    <label class="mr-5 ml-3">Sexo:
+                                <div class="form-check form-check-inline m-3">
+                                    <input class="form-check-input" type="radio" name="sexo" id="sexo1" value="f">
+                                    <label class="form-check-label" for="sexo1">Mujer</label>
+                                </div>
+                                <div class="form-check form-check-inline m-2">
+                                    <input class="form-check-input" type="radio" name="sexo" id="sexo2" value="m">
+                                    <label class="form-check-label" for="sexo2">Hombre</label>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="especialidades" data-toggle="popover" data-placement="top" data-content="Ingresar especialidad.">
+                                <label class="col-3 col-form-label">Especialidad:</label>
+                                <select class="form-control col-7" name="especialidades[]" id="especialidadesGroup" multiple="multiple" required>
+                                <% for(var i=0; i<doctores.length; i++){
+                                 %>
+                                <option selected value="<%= doctores[i].idEspecialidad %>">
+                                    <%= doctores[i].nombreEspecialidad %></option>
+
+                                <% }%>
+
+                            </select>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">Matrícula:</label>
+                                <input type="number" name="matricula" id="matricula" value="<%= doctores[0].matriculaDoctor %>" class="form-control col-7" disabled>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label">E-mail:</label>
+                                <input type="email" id="email" name="email" value="<%= doctores[0].emailDoctor %>" class="form-control col-7" required data-toggle="popover" data-container="body" data-content="Ingresar email válido.">
+                            </div>
+
+                            <div class="form-group row" id="obras" data-toggle="popover" data-placement="top" data-content="Ingresar Obra Social.">
+                                <label class="col-3 col-form-label">O. Sociales:</label>
+                                <select class="form-control col-7" name="obrassociales[]" id="obrassocialesGroup" multiple="multiple" required>
+                                <% 
+                                 for(var i=0; i<doctores.length; i++){
+                                %>
+                                <option selected value="<%=doctores[i].idObraS%>"><%= doctores[i].nombreObraS %>
+                                </option>
+
+                                <% }%>
+
+                            </select>
+                            </div>
+
+                            <div class="form-group row">
+
+                                <div class="input-group mb-3">
+                                    <label class="col-3 col-form-label">Honorarios:</label>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="number" class="form-control col-4" id="honorarios" name="honorarios" value="<%= doctores[0].honorarioDoctor %>" required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="grupoHonorario" data-toggle="popover" data-container="body" data-content="Ingresar honorarios.">.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check mt-2 offset-3">
+                                <input class="form-check-input" type="radio" name="doctoractivo" id="doctoractivo1" value="0">
+                                <label class="form-check-label" for="doctoractivo1">
+                                Activo
+                            </label>
+                            </div>
+                            <div class="form-check offset-3">
+                                <input class="form-check-input" type="radio" name="doctoractivo" id="doctoractivo2" value="1">
+                                <label class="form-check-label" for="doctoractivo2">
+                                Inactivo
+                            </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" id="modificar" class="btn btn-primary ml-3">Modificar</button>
+                            <a href="/doctores" role="button" class="btn btn-secondary ml-3">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            <script>
+                $(document).ready(() => {
+                    $('#apellido').focus();
+
+
+                    $.ajax({
+                        url: '/doctores/especialidades',
+                        success: (especialidades) => {
+                            $('#especialidadesGroup').select2({
+                                theme: 'bootstrap4',
+                                tags: true
+
+                            });
+                            let select = $('#especialidadesGroup');
+                            let espeSelect = $('#especialidadesGroup').val();
+                            especialidades.forEach(especialidad => {
+                                let aux = especialidad.idEspecialidad.toString();
+                                if (!(espeSelect.includes(aux))) {
+                                    select.append(`                                
+                                <option value="${especialidad.idEspecialidad}">${especialidad.nombreEspecialidad}</option>
+                            `)
+                                }
+
+                            })
+                        }
+                    });
+
+                    $.ajax({
+                        url: '/doctores/obrassociales',
+                        success: (obrassociales) => {
+                            $('#obrassocialesGroup').select2({
+                                theme: 'bootstrap4',
+                                tags: true
+
+                            });
+
+                            let select = $('#obrassocialesGroup');
+                            let obraSocSelect = $('#obrassocialesGroup').val();
+                            obrassociales.forEach(obrasocial => {
+                                let aux = obrasocial.idObraS.toString();
+                                if (!(obraSocSelect.includes(aux))) {
+                                    select.append(`
+                                <option value=${obrasocial.idObraS}>${obrasocial.nombreObraS}</option>
+                            `)
+                                }
+
+                            })
+                        },
+
+                    });
+
+                    var usedNames = {};
+                    $("select > option").each(function() {
+                        if (usedNames[this.value]) {
+                            $(this).remove();
+                        } else {
+                            usedNames[this.value] = this.text;
+                        }
+                    });
+
+                    var id = $('#idDoc').val();
+                    var sex = $('#sex').val();
+
+                    if (sex == 'f') {
+                        $('#sexo1').prop("checked", true);
+                    } else {
+                        $('#sexo2').prop("checked", true);
+                    }
+
+                    var sexDoc;
+                    var acti;
+
+                    var act = $('#activ').val();
+
+                    if (act == 0) {
+                        $('#doctoractivo1').prop("checked", true);
+                    } else {
+                        $('#doctoractivo2').prop("checked", true);
+                    };
+
+
+                    $('#modificar').click(() => {
+                        $('#especialidadesGroup').select2({
+                            theme: 'bootstrap4'
+                        });
+                        $('#obrassocialesGroup').select2({
+                            theme: 'bootstrap4'
+                        });
+                        //validaciones
+                        var expresion = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/;
+                        if ($('#apellido').val() === '') {
+                            $('#apellido').popover('show');
+                            $('#apellido').focus();
+                            return false;
+                        } else {
+                            $('#apellido').popover('hide');
+
+                            if ($('#nombre').val() === '') {
+                                $('#nombre').popover('show');
+                                $('#nombre').focus();
+                                return false;
+                            } else {
+                                $('#nombre').popover('hide');
+                                if ($('#especialidadesGroup').select2().val().length == 0) {
+                                    $('#especialidades').popover('show');
+                                    $('#especialidadesGroup').select2({
+                                        theme: 'bootstrap4'
+                                    });
+                                    return false;
+                                } else {
+                                    $('#especialidades').popover('hide');
+                                    if ($('#email').val() == '' || !expresion.test($('#email').val())) {
+                                        $('#email').focus();
+                                        $('#email').popover('show');
+
+                                        return false;
+                                    } else {
+                                        $('#email').popover('hide');
+                                        if ($('#obrassocialesGroup').select2().val().length == 0) {
+                                            $('#obras').popover('show');
+                                            $('#especialidadesGroup').select2({
+                                                theme: 'bootstrap4'
+                                            });
+                                            $('#obrassocialesGroup').select2({
+                                                theme: 'bootstrap4'
+                                            });
+                                            return false;
+                                        } else {
+                                            $('#obras').popover('hide');
+
+                                            if ($('#honorarios').val() === '') {
+                                                $('#grupoHonorario').popover('show');
+                                                $('#especialidadesGroup').select2({
+                                                    theme: 'bootstrap4'
+                                                });
+                                                $('#obrassocialesGroup').select2({
+                                                    theme: 'bootstrap4'
+                                                });
+                                                return false;
+                                            } else {
+                                                $('#grupoHonorario').popover('hide');
+
+                                                if ($('#doctoractivo1').is(':checked')) {
+                                                    acti = 0;
+                                                } else {
+                                                    acti = 1;
+                                                };
+                                                if ($('#sexo1').is(':checked')) {
+                                                    sexDoc = 'f';
+                                                } else {
+                                                    sexDoc = 'm';
+                                                };
+
+                                                var datos = {
+                                                    apellido: $('#apellido').val(),
+                                                    nombre: $('#nombre').val(),
+                                                    matricula: $('#matricula').val(),
+                                                    email: $('#email').val(),
+                                                    honorarios: $('#honorarios').val(),
+                                                    especialidades: $('#especialidadesGroup').select2().val(),
+                                                    obrassociales: $('#obrassocialesGroup').select2().val(),
+                                                    sex: sexDoc,
+                                                    baja: acti
+                                                };
+                                                console.log(datos);
+
+                                                $.ajax({
+                                                    type: 'post',
+                                                    data: datos,
+                                                    url: '/doctores/edit/' + id,
+                                                    success: (resul) => {
+                                                        if (resul) {
+                                                            $('#especialidadesGroup').select2({
+                                                                theme: 'bootstrap4'
+                                                            });
+                                                            $('#obrassocialesGroup').select2({
+                                                                theme: 'bootstrap4'
+                                                            });
+                                                            setTimeout(() => {
+                                                                window.location.href = "/doctores";
+                                                            }, 1000)
+
+                                                        }
+                                                    }
+                                                })
+
+                                            }
+
+
+
+
+
+                                        }
+                                    }
+
+                                }
+                            }
+                        };
+
+                        if ($('#doctoractivo1').is(':checked')) {
+                            acti = 0;
+                        } else {
+                            acti = 1;
+                        };
+                        if ($('#sexo1').is(':checked')) {
+                            sexDoc = 'f';
+                        } else {
+                            sexDoc = 'm';
+                        };
+
+                        var datos = {
+                            apellido: $('#apellido').val(),
+                            nombre: $('#nombre').val(),
+                            matricula: $('#matricula').val(),
+                            email: $('#email').val(),
+                            honorarios: $('#honorarios').val(),
+                            especialidades: $('#especialidadesGroup').select2().val(),
+                            obrassociales: $('#obrassocialesGroup').select2().val(),
+                            sex: sexDoc,
+                            baja: acti
+                        };
+                        console.log(datos);
+
+                        /*$.ajax({
+                            type: 'post',
+                            data: datos,
+                            url: '/doctores/edit/'+id,
+                            success: (resul) => {
+                                if(resul){
+                                    window.location.href = "/doctores";
+                                }
+                            }
+                        })*/
+
+
+
+
+                    });
+
+
+                })
+            </script>
+            <script src="/js/abrirMenu.js"></script>
+
+    </body>
+
+    </html>

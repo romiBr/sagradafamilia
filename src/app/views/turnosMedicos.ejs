@@ -1,0 +1,546 @@
+<% include ./partials/header %>
+    <link rel="stylesheet" href="/css/fullcalendar.min.css">
+    <script src="/js/fullcalendar.min.js"></script>
+    <script src="/js/es.js"></script>
+
+
+    <title>Turnos</title>
+    </head>
+
+    <body>
+        <%include ./partials/menu %>
+
+            <div class="contenido abrir">
+                <input type="text" name="doctor" id="idDoctor" value="<%=doctor.idDoctor%>" hidden>
+                <input type="text" id="firmaDoctor" value="<%=doctor.apellidoDoctor%> <%=doctor.nombreDoctor%>" hidden>
+                <input type="text" id="sexoDoctor" value="<%=doctor.sexoDoctor%>" hidden>
+
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="navbar-brand">Turnos</div>
+                </nav>
+                <br>
+                <i id="menu-bar" class="fas fa-bars fa-2x"></i>
+                <br>
+
+                <div class="container">
+                    <div class="col-8">
+
+                        <div class="pt-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    Mañana
+                                </div>
+                                <div class="card-body">
+                                    <div id="cal_turnos_man"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    Tarde
+                                </div>
+                                <div class="card-body">
+                                    <div id="cal_turnos_tar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Modificar-Borrar-->
+            <div class="modal fade" id="turnoModalCambios" data-backdrop="false" role="dialog" aria-labelledby="turnoModalCambiosLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="turnoModalCambiosLabel">Modificar Turno</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="">
+                                            <input type="hidden" id="idTurnoCambios">
+                                            <input type="hidden" id="fechaTurnoInputCambios">
+                                            <label class="col-5">Fecha:</label>
+                                            <label id="fechaTurnoCambios" class="col-5"></label>
+
+                                            <label class="col-5">Hora:</label>
+                                            <label id="horaTurnoCambios" class="col-5"></label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="input-group mb-3">
+                                        <input type="hidden" name="paciente" id="idPacienteElegidoCambios">
+                                        <input type="text" class="form-control" id="pacienteElegidoCambios" placeholder="Paciente" disabled required>
+                                        <!--<div class="input-group-append">
+                                    <a href="#" class="btn btn-outline-primary" id="botonModalCambios" role="button" data-toggle="modal" data-target="#pacienteModal">...</a>
+                                </div>-->
+                                    </div>
+
+                                    <div class="form-row align-items-center mb-2 pago" id="obraSsiC">
+                                        <div class="col-auto">
+                                            <label for="obraSSelect">Obra Social:
+                                </div>
+                                <div class="col-auto">
+                                    <input name="obraSSelect" id="obraSSelectC" class="form-control" disabled>
+                                </div>                                
+                                
+                            </div>
+                            <div class="mb-2 pago" id="obraSnoC">
+                                <div class="form-row align-items-center">
+                                    <div class="col-auto">
+                                        <label for="honorarios">Honorarios Médicos:</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="number" class="form-control" id="honorariosC" name="honorarios" min=200 max=2000 disabled>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row align-items-center">
+                                        <div class="col-auto">
+                                            <label for="metodologiaC">Metodología de Pago:</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <input class="form-control" id="metodologiaC" name="metodologia" disabled>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row align-items-center mt-3" id="bancoGroupC">
+                                        <div class="col-auto">
+                                            <label for="metodologiaC">Banco:</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <input class="form-control" id="bancoC" name="bancoC" disabled>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnAtendido" class="btn btn-success">Atender</button>
+                        <button type="button" id="btnHistoriaClinica" class="btn btn-success">Historia Clínica</button>
+
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Historia Clínica -->
+            <div class="modal fade" id="historiaClinica" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="historiaClinicaTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="historiaClinicaTitle">Historia Clínica</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="cuerpoHistoria">
+
+                            </div>
+                            <textarea class="form-control" name="contenido" id="contenidoHistoria" rows="10"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="guardarHistoria" class="btn btn-primary">Guardar Historia</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                $(document).ready(() => {
+                    $('#cuerpoHistoria').empty();
+                    var id = $('#idDoctor').val();
+                    $.ajax({
+                        url: '/turnos/eventos/' + id,
+                        success: (eventos) => {
+                            var i = 0;
+                            var color;
+                            var grupoEventos = [];
+                            eventos.forEach(evento => {
+                                if (evento.atendido == 0) {
+                                    color = '#2E9AFE';
+                                } else if (evento.atendido == 1) {
+                                    color = '#04B404';
+                                } else if (evento.atendido == 2) {
+                                    color = '#FFFF00';
+                                } else if (evento.atendido == 3) {
+                                    color = '#FE2E2E'
+                                }
+                                grupoEventos[i] =
+
+                                    {
+                                        'idTurno': evento.idTurno,
+                                        'title': evento.apellidoPaciente + " " + evento.nombrePaciente,
+                                        'start': evento.start,
+                                        'idPaciente': evento.id,
+                                        'idDoctor': evento.idDoctor,
+                                        'idObraSocial': evento.idObraS,
+                                        'valorConsulta': evento.valorConsulta,
+                                        'atendido': evento.atendido,
+                                        'idBanco': evento.idBanco,
+                                        'idModalidad': evento.idModalidad,
+                                        'color': color
+                                    }
+
+                                i++;
+
+                            });
+
+                            $('#cal_turnos_man').fullCalendar({
+                                header: {
+                                    left: 'today,prev,next',
+                                    center: 'title',
+                                    right: 'agendaDay,month,agendaWeek,listaPorDosDias'
+                                },
+
+                                minTime: "08:00:00",
+                                maxTime: "12:00:00",
+                                defaultTimedEventDuration: '00:15:00',
+                                forceEventDuration: true,
+                                allDaySlot: false,
+                                selectable: true,
+                                eventLimit: true,
+                                eventDurationEditable: false,
+
+                                timezone: 'local',
+
+                                height: 470,
+
+                                firstDay: moment(new Date()).weekday() + 1,
+
+                                weekends: false,
+                                defaultView: 'agendaDay',
+                                slotDuration: '00:15:00',
+                                slotLabelInterval: '00:15:00',
+                                slotLabelFormat: 'HH:mm',
+                                navLinks: true,
+
+                                eventOverlap: false,
+
+                                events: grupoEventos,
+
+                                eventClick: function(event, jsEvent, view) {
+                                    var hoy = moment(new Date());
+                                    var fechaSel = event.start;
+                                    if (view.name != 'month') {
+                                        if (moment(fechaSel).isBefore(hoy)) {
+                                            alert('No se puede cambiar turno. Fecha/Hora anterior.');
+                                        } else {
+                                            if (event.atendido == 3 || event.atendido == 0) {
+                                                $('#btnAtendido').hide();
+                                                $('#btnHistoriaClinica').hide();
+                                            } else if (event.atendido == 1) {
+                                                $('#btnAtendido').hide();
+                                                $('#btnHistoriaClinica').show();
+
+                                            } else if (event.atendido == 2) {
+                                                $('#btnAtendido').show();
+                                                $('#btnHistoriaClinica').hide();
+                                            }
+
+                                            var f = fechaSel.format("DD/MM/YYYY");
+                                            var h = fechaSel.format("HH:mm");
+                                            $('#fechaTurnoCambios').html(f);
+                                            $('#fechaTurnoCambiosInput').val(fechaSel.format("YYYY-MM-DD") + " " + fechaSel.format("HH:mm:ss"));
+                                            $('#horaTurnoCambios').html(h + " hs.");
+                                            var dr = $('#doctoresselect option:selected').text();
+                                            var id = $('#doctoresselect option:selected').val();
+                                            $('#doctorTurnoCambios').html(dr);
+                                            $('#idPacienteElegidoCambios').val(event.idPaciente);
+                                            $('#pacienteElegidoCambios').val(event.title);
+                                            $('#idTurnoCambios').val(event.idTurno);
+                                            $.ajax({
+                                                url: '/turnos/obras/' + event.idObraSocial,
+                                                success: (obra) => {
+                                                    $('#obraSSelectC').val(obra[0].nombreObraS);
+                                                }
+                                            });
+                                            if (event.idObraSocial != 13) {
+                                                $('#obraSnoC').hide();
+
+                                            } else {
+                                                $('#obraSnoC').show();
+                                                if (event.idModalidad == 1 || event.idModalidad == 2) {
+                                                    $('#bancoGroupC').hide();
+                                                } else {
+                                                    $('#bancoGroupC').show();
+                                                    $.ajax({
+                                                        url: '/turnos/banco/' + event.idBanco,
+                                                        success: (banco) => {
+                                                            $('#bancoC').val(banco[0].nombreBanco);
+                                                        }
+                                                    })
+                                                }
+                                                $('#honorariosC').val(event.valorConsulta);
+                                                $.ajax({
+                                                    url: '/turnos/modalidad/' + event.idModalidad,
+                                                    success: (modalidad) => {
+                                                        $('#metodologiaC').val(modalidad[0].nombreModalidad);
+                                                    }
+                                                })
+                                            }
+                                            $('#turnoModalCambios').modal('show');
+
+                                        }
+                                    }
+                                }
+
+                            });
+
+                            $('#cal_turnos_tar').fullCalendar({
+                                header: {
+                                    left: 'today,prev,next',
+                                    center: 'title',
+                                    right: 'agendaDay,month,agendaWeek,listaPorDosDias'
+                                },
+
+                                minTime: "16:00:00",
+                                maxTime: "20:00:00",
+                                defaultTimedEventDuration: '00:15:00',
+                                forceEventDuration: true,
+                                allDaySlot: false,
+                                selectable: true,
+                                eventLimit: true,
+                                eventDurationEditable: false,
+
+                                timezone: 'local',
+
+                                height: 470,
+
+                                firstDay: moment(new Date()).weekday() + 1,
+
+                                weekends: false,
+                                defaultView: 'agendaDay',
+                                slotDuration: '00:15:00',
+                                slotLabelInterval: '00:15:00',
+                                slotLabelFormat: 'HH:mm',
+                                navLinks: true,
+
+                                eventOverlap: false,
+
+                                events: grupoEventos,
+
+                                eventClick: function(event, jsEvent, view) {
+                                    var hoy = moment(new Date());
+                                    var fechaSel = event.start;
+                                    if (view.name != 'month') {
+                                        if (moment(fechaSel).isBefore(hoy)) {
+                                            alert('No se puede cambiar turno. Fecha/Hora anterior.');
+                                        } else {
+                                            if (event.atendido == 3 || event.atendido == 0) {
+                                                $('#btnAtendido').hide();
+                                                $('#btnHistoriaClinica').hide();
+                                            } else if (event.atendido == 1) {
+                                                $('#btnAtendido').hide();
+                                                $('#btnHistoriaClinica').show();
+
+                                            } else if (event.atendido == 2) {
+                                                $('#btnAtendido').show();
+                                                $('#btnHistoriaClinica').hide();
+                                            }
+
+                                            var f = fechaSel.format("DD/MM/YYYY");
+                                            var h = fechaSel.format("HH:mm");
+                                            $('#fechaTurnoCambios').html(f);
+                                            $('#fechaTurnoCambiosInput').val(fechaSel.format("YYYY-MM-DD") + " " + fechaSel.format("HH:mm:ss"));
+                                            $('#horaTurnoCambios').html(h + " hs.");
+                                            var dr = $('#doctoresselect option:selected').text();
+                                            var id = $('#doctoresselect option:selected').val();
+                                            $('#doctorTurnoCambios').html(dr);
+                                            $('#idPacienteElegidoCambios').val(event.idPaciente);
+                                            $('#pacienteElegidoCambios').val(event.title);
+                                            $('#idTurnoCambios').val(event.idTurno);
+                                            $.ajax({
+                                                url: '/turnos/obras/' + event.idObraSocial,
+                                                success: (obra) => {
+                                                    $('#obraSSelectC').val(obra[0].nombreObraS);
+                                                }
+                                            });
+                                            if (event.idObraSocial != 13) {
+                                                $('#obraSnoC').hide();
+
+                                            } else {
+                                                $('#obraSnoC').show();
+                                                if (event.idModalidad == 1 || event.idModalidad == 2) {
+                                                    $('#bancoGroupC').hide();
+                                                } else {
+                                                    $('#bancoGroupC').show();
+                                                    $.ajax({
+                                                        url: '/turnos/banco/' + event.idBanco,
+                                                        success: (banco) => {
+                                                            $('#bancoC').val(banco[0].nombreBanco);
+                                                        }
+                                                    })
+                                                }
+                                                $('#honorariosC').val(event.valorConsulta);
+                                                $.ajax({
+                                                    url: '/turnos/modalidad/' + event.idModalidad,
+                                                    success: (modalidad) => {
+                                                        $('#metodologiaC').val(modalidad[0].nombreModalidad);
+                                                    }
+                                                })
+                                            }
+                                            $('#turnoModalCambios').modal('show');
+
+                                        }
+                                    }
+                                }
+
+                            });
+
+
+
+                        },
+
+                    });
+
+                    $(document).ready(() => {
+                        $('#btnHistoriaClinica').click(() => {
+                            $('#cuerpoHistoria').empty();
+                            $('#contenidoHistoria').val("");
+                            var id = $('#idPacienteElegidoCambios').val();
+
+                            $.ajax({
+                                url: '/turnos/historia/' + id,
+                                success: (historias) => {
+                                    historias.forEach(historia => {
+                                        $('#cuerpoHistoria').append(`
+                                            <p>${historia.contenido}</p>
+                                        `)
+                                    })
+                                }
+                            });
+                            var hoy = moment(new Date());
+                            var firma = $('#firmaDoctor').val();
+                            var sexo = $('#sexoDoctor').val();
+                            var honorifico = 'Dr.';
+                            if (sexo === 'f') {
+                                honorifico = 'Dra.';
+                            }
+                            $('#contenidoHistoria').val(hoy.format("DD/MM/YYYY") + " " + hoy.format("HH:mm") + " hs. - (" + honorifico + " " + firma + "): ");
+                            $('#historiaClinica').modal('show');
+                        });
+
+                        $('#guardarHistoria').click(() => {
+
+
+                            nuevaHistoria = {
+                                paciente: $("input[name='paciente']").val(),
+                                doctor: $("input[name='doctor']").val(),
+                                contenido: $("textarea[name='contenido']").val()
+                            };
+                            $.ajax({
+                                type: 'post',
+                                url: '/turnos/guardar',
+                                data: nuevaHistoria,
+                                success: (resp) => {
+                                    setTimeout(() => {
+                                        alert('Historia Clínica agregada correctamente.');
+                                        $('#historiaClinica').modal('toggle');
+                                        $('#turnoModalCambios').modal('toggle');
+                                    }, 1000);
+
+                                }
+                            })
+                        })
+
+                        $('#btnAtendido').click(() => {
+                            var respuesta = confirm('¿Desea cambiar estado de Turno a "Atendido"?');
+                            var doctor = $('#idDoctor').val();
+                            var grupoEventos = [];
+                            if (respuesta) {
+                                var id = $('#idTurnoCambios').val();
+                                $.ajax({
+                                    url: '/turnos/atendido/' + id,
+                                    success: (resp) => {
+
+                                        armarEvents(doctor, grupoEventos);
+                                        setTimeout(() => {
+                                            $('#cal_turnos_man').fullCalendar('removeEvents');
+                                            $('#cal_turnos_man').fullCalendar('addEventSource', grupoEventos);
+                                            $('#cal_turnos_man').fullCalendar('rerenderEvents');
+                                            $('#cal_turnos_tar').fullCalendar('removeEvents');
+                                            $('#cal_turnos_tar').fullCalendar('addEventSource', grupoEventos);
+                                            $('#cal_turnos_tar').fullCalendar('rerenderEvents');
+                                            $('#turnoModalCambios').modal('toggle');
+                                            alert('Turno cambiado a "Atendido" exitosamente.');
+                                        }, 2000);
+                                    }
+                                })
+                            }
+                        });
+                    })
+
+                });
+            </script>
+
+            <script>
+                function armarEvents(doctor, grupoEventos) {
+                    $.ajax({
+                        url: '/turnos/eventos/' + doctor,
+                        success: (eventos) => {
+                            var i = 0;
+                            var color;
+
+                            eventos.forEach(evento => {
+                                if (evento.atendido == 0) {
+                                    color = '#2E9AFE';
+                                } else if (evento.atendido == 1) {
+                                    color = '#04B404';
+                                } else if (evento.atendido == 2) {
+                                    color = '#FFFF00';
+                                } else if (evento.atendido == 3) {
+                                    color = '#FE2E2E'
+                                }
+                                grupoEventos[i] =
+
+                                    {
+                                        'idTurno': evento.idTurno,
+                                        'title': evento.apellidoPaciente + " " + evento.nombrePaciente,
+                                        'start': evento.start,
+                                        'idPaciente': evento.id,
+                                        'idDoctor': evento.idDoctor,
+                                        'idObraSocial': evento.idObraS,
+                                        'valorConsulta': evento.valorConsulta,
+                                        'atendido': evento.atendido,
+                                        'idBanco': evento.idBanco,
+                                        'idModalidad': evento.idModalidad,
+                                        'color': color
+                                    }
+                                i++;
+                            });
+                        }
+                    })
+                };
+            </script>
+
+            <script src="/js/abrirMenu.js"></script>
+    </body>
+
+    </html>

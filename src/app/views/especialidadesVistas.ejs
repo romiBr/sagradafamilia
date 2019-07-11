@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <% include ./partials/header %>
+
+    <title>Especialidades</title>
+</head>
+<body>
+    <%include ./partials/menu %>
+
+    <div class="contenido abrir">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="navbar-brand">Especialidades</div>
+        </nav>   
+        <br>
+        <i id="menu-bar" class="fas fa-bars fa-2x"></i>
+        <br>
+        
+        <div class="container">
+            <div class="row">
+                <!--<button class="btn btn-primary" data-toggle="modal" data-target="#especialidadModal">Agregar Especialidad</button>-->
+                <a href="/especialidades/agregar" class="btn btn-primary">Agregar Especialidad</a>
+            </div>
+            <br>
+            <div class="row">
+                <div class="table-responsive col-md-10">
+                    <table id="tabla_especialidades" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</td>
+                                <th>Especialidad</th>                     
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(var i = 0; i < especialidades.length; i++){ %>
+                                <tr>
+                                    <td>
+                                        <%= i+1 %>
+                                    </td>
+                                    <td>
+                                        <%= especialidades[i].nombreEspecialidad %>
+                                    </td>
+                                    <td>
+                                        <a href="/especialidades/edit/<%=especialidades[i].idEspecialidad %>" role="button" class="btn btn-secondary btn-sm" >
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        
+                                                                                
+                                    </td>                         
+                                
+                                </tr>
+                            <% } %>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</td>
+                                <th>Especialidad</th>
+                                <th>Editar</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="especialidadModal" tabindex="-1" role="dialog" aria-labelledby="especialidadModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="especialidadModalLabel">Agregar Especialidad</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/especialidades" method="post" class="card-body">
+                            <div class="form-group">
+                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre de la especialidad" required>
+                            </div>
+                                
+                            <div class="modal-footer">                        
+                                <input type="submit" value="Aceptar" id="Aceptar" class="btn btn-primary">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+        
+                </div>
+            </div>
+        </div>   
+
+        <!-- Modal Modificar -->
+        <div class="modal fade" id="especialidadModifModal" tabindex="-1" role="dialog" aria-labelledby="especialidadModifModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="especialidadModifModalLabel">Modificar Especialidad</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/especialidades" method="post" class="card-body">
+                            <div class="form-group">
+                                <input type="text" id="nombre" name="nombre" class="form-control" required>
+                            </div>
+                                
+                            <div class="modal-footer">                        
+                                <input type="submit" value="Aceptar" id="Aceptar" class="btn btn-primary">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+        
+                </div>
+            </div>
+        </div>   
+
+</div>
+    
+
+    <script>
+        $(document).ready(()=>{
+            $('#tabla_especialidades').DataTable({
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ Registros por página",
+                    "zeroRecords": "No se encontraron resultados en su búsqueda.",
+                    "searchPlaceholder": "Buscar Especialidad",
+                    "info": "Mostrando registros del _START_ al _END_ de un total de _MAX_",
+                    "infoEmpty": "No existen registros.",
+                    "infoFiltered": "(Filtrado de un total de _MAX_ registros",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "fist": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+
+                "columnDefs": [
+                    {"className": "dt-center", "targets": "_all"}
+                ],
+            });
+            
+            $('#especialidadModal').on('shown.bs.modal', function () {
+                $('#nombre').trigger('focus')
+            });
+
+            
+            
+        })
+
+        
+    </script>
+    <script src="/js/abrirMenu.js"></script>
+</body>
+</html>

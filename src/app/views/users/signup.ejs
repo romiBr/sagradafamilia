@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <% include ../partials/header %>  
+    
+
+    <title>Registrar usuario</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <div class="navbar-brand">Registrar Usuario</div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="row m-5">
+            <div class="col-6 offset-3">
+                <div class="card animated flipInY">
+                    <div class="card-header">Registrar Usuario</div>
+                    <div class="card-body">
+                        <form action="/auth/signup" method="post" autocomplete="off">                            
+                            <div class="form-group">
+                                <label for="name">Nombre:</label>
+                                <input type="text" name="name" id="name" placeholder="Nombre" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-chack-label">Sexo:
+                                <div class="form-check form-check-inline ml-2">
+                                    <input class="form-check-input" type="radio" name="sexo" id="sexo1" value="f" checked>
+                                    <label class="form-check-label" for="sexo1">Mujer</label>
+                                </div>
+                                <div class="form-check form-check-inline ml-2">
+                                    <input class="form-check-input" type="radio" name="sexo" id="sexo2" value="m">
+                                    <label class="form-check-label" for="sexo2">Hombre</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" name="email" id="email" placeholder="Email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Contraseña:</label>
+                                <input type="password" name="password" id="password" placeholder="Contraseña" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-check-label">Rol de Usuario:
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="rol" id="rol1" value="secretaria" checked>
+                                    <label class="form-check-label" for="rol1">
+                                        Secretaria
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="rol" id="rol2" value="director">
+                                    <label class="form-check-label" for="rol2">
+                                        Director
+                                    </label>
+                                </div>    
+                            </div>                            
+
+                            <button type="sumit" class="btn btn-primary">Registrar</button>
+                            <a href="/home" type="button" class="btn btn-secondary">Cancelar</a>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(()=>{
+            $('#name').focus();
+        })
+    </script>
+
+</body>
+
+</html>

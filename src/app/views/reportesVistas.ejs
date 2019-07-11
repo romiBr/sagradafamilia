@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <% include ./partials/header %>
+
+    <title>Reportes</title>
+</head>
+<body>
+    <%include ./partials/menu %>
+
+    <div class="contenido abrir">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="navbar-brand">Reportes</div>
+        </nav>
+
+        <i id="menu-bar" class="fas fa-bars fa-2x m-2"></i>       
+        
+        <div class="container">
+            <div class="row">
+                <button class="btn btn-primary m-2" id="listarosha">Listar Obras Sociales Habilitadas</button>
+            </div>
+            <div class="row" id="oshab">
+                <div class="col-6">
+                    <table id="tabla_oshab" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</td>                    
+                                    <th>Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyhab">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <button class="btn btn-primary m-2" id="listarosinha">Listar Obras Sociales Inhabilitadas</button>
+            </div>
+            <div class="row" id="osinhab">
+                <div class="col-6">
+                    <table id="tabla_osinhab" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</td>                    
+                                    <th>Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyinhab">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="row">
+                <button class="btn btn-primary m-2" id="listarturnosdia">Listar Turnos del Día</button>
+            </div>
+
+            <div id="turnosdia">
+                <div class="row">
+                    <div class="col-10">
+                        <table id="tabla_turnos_dia" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</td>
+                                        <th>Hora</td>                     
+                                        <th>Paciente</th>
+                                        <th>DNI</th>
+                                        <th>Doctor</th>
+                                        <th>Modalidad</th>
+                                        <th>Obra Social</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyturnosdia">
+                                </tbody>
+                        </table>
+                    </div>
+                </div> 
+            </div>
+
+            
+            <div class="row">
+                <button class="btn btn-primary m-2" id="listarturnosdiamedico">Listar Turnos del Día por Médico</button>
+            </div>
+            <div id="turnosdiamedico">
+                <div class="row">
+                    <select class="form-control ml-5 my-3 col-4" name="doctor" id="doctor">
+                        <option selected value="">Seleccione Doctor...</option>
+
+                    </select>
+                </div>
+
+                <div id="tablaturnosdiamedico">
+                    <div class="row">
+                        <div class="col-8">
+                            <table id="tabla_turnos_dia_medico" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</td>
+                                            <th>Hora</td>                     
+                                            <th>Paciente</th>
+                                            <th>DNI</th>
+                                            <th>Modalidad</th>
+                                            <th>Obra Social</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyturnosdiamedico">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+
+            <div class="row">
+                <button class="btn btn-primary m-2" id="listarturnosdiasiguiente">Listar Turnos del Día Siguiente</button>
+            </div>
+
+            <div id="turnosdiasiguiente">
+                <div class="row">
+                    <div class="col-10">
+                        <table id="tabla_turnos_diasiguiente" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</td>
+                                        <th>Hora</td>                     
+                                        <th>Paciente</th>
+                                        <th>DNI</th>
+                                        <th>Doctor</th>
+                                        <th>Modalidad</th>
+                                        <th>Obra Social</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyturnosdiasiguiente">
+                                </tbody>
+                        </table>
+                    </div>
+                </div> 
+            </div>
+
+            
+            <div class="row">
+                <button class="btn btn-primary m-2" id="listarturnosdiasiguientemedico">Listar Turnos del Día Siguiente por Médico</button>
+            </div>
+            <div id="turnosdiasiguientemedico">
+                <div class="row">
+                    <select class="form-control ml-5 my-3 col-4" name="doctor" id="doctorsiguiente">
+                        <option selected value="">Seleccione Doctor...</option>
+
+                    </select>
+                </div>
+
+                <div id="tablaturnosdiasiguientemedico">
+                    <div class="row">
+                        <div class="col-8">
+                            <table id="tabla_turnos_diasiguiente_medico" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</td>
+                                            <th>Hora</td>                     
+                                            <th>Paciente</th>
+                                            <th>DNI</th>
+                                            <th>Modalidad</th>
+                                            <th>Obra Social</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyturnosdiasiguientemedico">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            
+            
+        </div><!--container-->
+            
+    </div>
+    <a href="/">Inicio</a>
+
+    <script src="/js/abrirMenu.js"></script>
+    <script>
+
+        $(document).ready(()=>{
+            $('#oshab').hide();
+            $('#osinhab').hide();
+            $('#turnosdia').hide();
+            $('#turnosdiamedico').hide();
+            $('#tablaturnosdiamedico').hide();
+            $('#turnosdiasiguiente').hide();
+            $('#turnosdiasiguientemedico').hide();
+            $('#tablaturnosdiasiguientemedico').hide();
+            
+
+            $('#listarosha').click(()=>{
+                $('#osinhab').hide();
+                $('#turnosdia').hide();
+                $('#turnosdiamedico').hide();
+                $('#tablaturnosdiamedico').hide();
+                $('#turnosdiasiguiente').hide();
+                $('#turnosdiasiguientemedico').hide();
+                $('#tablaturnosdiasiguientemedico').hide();
+                if($('#oshab').is(':visible')){
+                    $('#oshab').hide();
+                }else{
+                    var tabla = $('#tbodyhab');
+                    tabla.empty();
+                    var i = 1;
+                    $.ajax({
+                        url: '/reportes/obrashab',
+                        success: (obrassociales) =>{
+                            obrassociales.forEach(obrasocial => {
+                                tabla.append(`
+                                    <tr>
+                                        <td>${i}</td>
+                                        <td>${obrasocial.nombreObraS}</td>
+                                    </tr>
+                                `);
+                                i++;
+
+                            });
+                            $('#oshab').show();
+                        }
+                    });
+                }
+                
+            });
+
+            $('#listarosinha').click(()=>{
+                $('#oshab').hide();
+                $('#turnosdia').hide();
+                $('#turnosdiamedico').hide();
+                $('#tablaturnosdiamedico').hide();
+                $('#turnosdiasiguiente').hide();
+                $('#turnosdiasiguientemedico').hide();
+                $('#tablaturnosdiasiguientemedico').hide();
+                if($('#osinhab').is(':visible')){
+                    $('#osinhab').hide();
+                }else{
+                    var tabla = $('#tbodyinhab');
+                    tabla.empty();
+                    var i = 1;
+                    $.ajax({
+                        url: '/reportes/obrasinhab',
+                        success: (obrassociales) =>{
+                            obrassociales.forEach(obrasocial => {
+                                tabla.append(`
+                                    <tr>
+                                        <td>${i}</td>
+                                        <td>${obrasocial.nombreObraS}</td>
+                                    </tr>
+                                `);
+                                i++;
+
+                            });
+                            $('#osinhab').show();
+                        }
+                    });
+                }
+                
+                
+            });
+
+            $('#listarturnosdia').click(()=>{
+                $('#oshab').hide();
+                $('#osinhab').hide();
+                $('#turnosdiamedico').hide();
+                $('#tablaturnosdiamedico').hide();
+                $('#turnosdiasiguiente').hide();
+                $('#turnosdiasiguientemedico').hide();
+                $('#tablaturnosdiasiguientemedico').hide();
+                if($('#turnosdia').is(':visible')){
+                    $('#turnosdia').hide();
+                }else{
+                    var tabla = $('#tbodyturnosdia');
+                    tabla.empty();
+                    var i = 1;
+                    $.ajax({
+                        url: '/reportes/turnosdia',
+                        success: (reportes) =>{
+
+                            reportes.forEach(reporte => {
+                                tabla.append(`
+                                    <tr>
+                                        <td>${i}</td>
+                                        <td>${reporte.hora}</td>
+                                        <td>${reporte.apellidoPaciente} ${reporte.nombrePaciente}</td>
+                                        <td>${reporte.dniPaciente}</td>
+                                        <td>${reporte.apellidoDoctor} ${reporte.nombreDoctor}</td>
+                                        <td>${reporte.nombreModalidad}</td>
+                                        <td>${reporte.nombreObraS}</td>
+                                    </tr>
+                                `);
+                                i++;
+                            });
+
+                            $('#turnosdia').show();
+                        }
+
+                    })
+                    
+                }
+            });
+
+            $('#listarturnosdiamedico').click(()=>{
+                $('#oshab').hide();
+                $('#osinhab').hide();
+                $('#turnosdia').hide();
+                $('#turnosdiasiguiente').hide();
+                $('#turnosdiasiguientemedico').hide();
+                $('#tablaturnosdiasiguientemedico').hide();
+                if($('#turnosdiamedico').is(':visible')){
+                    $('#turnosdiamedico').hide();
+                    $('#tablaturnosdiamedico').hide();
+                }else{
+                    $('#turnosdiamedico').show();
+                    var select = $('#doctor');
+                    select.empty();
+                    $.ajax({                        
+                        url: '/reportes/doctores',
+                        success: (doctores) =>{
+                            select.append(`
+                                <option selected value="">Seleccionar Médico...</option>
+                            `)
+                            doctores.forEach(doctor => {
+                                select.append(`
+                                    <option value=${doctor.idDoctor}>${doctor.apellidoDoctor} ${doctor.nombreDoctor}</option>
+                                `)
+                            });
+                            if(select.change(()=>{
+                                $('#tablaturnosdiamedico').hide();
+                                var i = 1;
+                                if(select.val()!=""){                                    
+                                    var tabla = $('#tbodyturnosdiamedico');
+                                    
+                                    tabla.empty(); 
+                                    $.ajax({
+                                        url: '/reportes/doctores/'+select.val(),
+                                        success: (reportes) =>{
+                                            tabla.empty();
+                                            reportes.forEach(reporte => {                                                 
+                                                tabla.append(`
+                                                    <tr>
+                                                        <td>${i}</td>
+                                                        <td>${reporte.hora}</td>
+                                                        <td>${reporte.apellidoPaciente} ${reporte.nombrePaciente}</td>                                                        
+                                                        <td>${reporte.dniPaciente}</td>
+                                                        <td>${reporte.nombreModalidad}</td>
+                                                        <td>${reporte.nombreObraS}</td>
+                                                    </tr>
+                                                `);
+                                                i++;
+                                            });
+                                            $('#tablaturnosdiamedico').show();
+                                        }
+                                    })
+                                }
+                            }));
+
+                        },
+                    });
+                    
+                }
+                
+            });
+
+            $('#listarturnosdiasiguiente').click(()=>{
+                $('#oshab').hide();
+                $('#osinhab').hide();
+                $('#turnosdiamedico').hide();
+                $('#tablaturnosdiamedico').hide();
+                $('#turnosdiasiguientemedico').hide();            
+                $('#tablaturnosdiasiguientemedico').hide();
+                if($('#turnosdiasiguiente').is(':visible')){
+                    $('#turnosdiasiguiente').hide();
+                }else{
+                    var tabla = $('#tbodyturnosdiasiguiente');
+                    tabla.empty();
+                    var i = 1;
+                    $.ajax({
+                        url: '/reportes/turnosdiasiguiente',
+                        success: (reportes) =>{
+
+                            reportes.forEach(reporte => {
+                                tabla.append(`
+                                    <tr>
+                                        <td>${i}</td>
+                                        <td>${reporte.hora}</td>
+                                        <td>${reporte.apellidoPaciente} ${reporte.nombrePaciente}</td>
+                                        <td>${reporte.dniPaciente}</td>
+                                        <td>${reporte.apellidoDoctor} ${reporte.nombreDoctor}</td>
+                                        <td>${reporte.nombreModalidad}</td>
+                                        <td>${reporte.nombreObraS}</td>
+                                    </tr>
+                                `);
+                                i++;
+                            });
+
+                            $('#turnosdiasiguiente').show();
+                        }
+
+                    })
+                    
+                }
+            });
+
+            $('#listarturnosdiasiguientemedico').click(()=>{
+                $('#oshab').hide();
+                $('#osinhab').hide();
+                $('#turnosdia').hide();
+                $('#turnosdiasiguiente').hide();
+                $('#turnosdiasiguiente').hide();
+                $('#turnosdiamedico').hide();
+                $('#tablaturnosdiamedico').hide();
+                if($('#turnosdiasiguientemedico').is(':visible')){
+                    $('#turnosdiasiguientemedico').hide();
+                    $('#tablaturnosdiasiguientemedico').hide();
+                }else{
+                    $('#turnosdiasiguientemedico').show();
+                    var select = $('#doctorsiguiente');
+                    select.empty();
+                    $.ajax({                        
+                        url: '/reportes/doctores',
+                        success: (doctores) =>{
+                            select.append(`
+                                <option selected value="">Seleccionar Médico...</option>
+                            `)
+                            doctores.forEach(doctor => {
+                                select.append(`
+                                    <option value=${doctor.idDoctor}>${doctor.apellidoDoctor} ${doctor.nombreDoctor}</option>
+                                `)
+                            });
+                            if(select.change(()=>{
+                                $('#tablaturnosdiasiguientemedico').hide();
+                                var i = 1;
+                                if(select.val()!=""){                                    
+                                    var tabla = $('#tbodyturnosdiasiguientemedico');
+                                    
+                                    tabla.empty(); 
+                                    $.ajax({
+                                        url: '/reportes/doctores/siguiente/'+select.val(),
+                                        success: (reportes) =>{
+                                            tabla.empty();
+                                            reportes.forEach(reporte => {                                                 
+                                                tabla.append(`
+                                                    <tr>
+                                                        <td>${i}</td>
+                                                        <td>${reporte.hora}</td>
+                                                        <td>${reporte.apellidoPaciente} ${reporte.nombrePaciente}</td>                                                        
+                                                        <td>${reporte.dniPaciente}</td>
+                                                        <td>${reporte.nombreModalidad}</td>
+                                                        <td>${reporte.nombreObraS}</td>
+                                                    </tr>
+                                                `);
+                                                i++;
+                                            });
+                                            $('#tablaturnosdiasiguientemedico').show();
+                                        }
+                                    })
+                                }
+                            }));
+
+                        },
+                    });
+                    
+                }
+                
+            });
+            
+        })
+
+    </script>
+</body>
+</html>

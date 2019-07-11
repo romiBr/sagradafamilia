@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <% include ./partials/header %>
+
+        <title>Obras Sociales</title>
+</head>
+
+<body>
+    <%include ./partials/menu %>
+
+        <div class="contenido abrir">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <div class="navbar-brand">Obras Sociales</div>
+            </nav>
+            <br>
+            <i id="menu-bar" class="fas fa-bars fa-2x"></i>
+            <br>
+            <div class="container">
+                <%if(isAuthenticated && (user.rol == 'director')){%>
+                    <div class="row">
+                        <a href="/obrassociales/agregar" class="btn btn-primary">Agregar Obra Social</a>
+                    </div>
+                    <%}%>
+
+                        <div class="row m-3">
+                            <div class="col-10">
+                                <table id="tabla_obras_sociales" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</td>
+                                                <th>Obra Social</th>
+                                                <th>Domicilio</th>
+                                                <th>Teléfono</th>
+                                                <th>E-mail</th>
+                                                <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%
+                                for(var i = 0; i < obrasSociales.length; i++){ 
+                                    if(obrasSociales[i].inhabilitada==1){%>
+                                            <tr style='color: red'>
+                                                <%}else{%>
+                                                    <tr>
+                                                        <%}%>
+
+                                                            <td>
+                                                                <%= i+1 %>
+                                                            </td>
+                                                            <td>
+                                                                <%= obrasSociales[i].nombreObraS %>
+                                                            </td>
+                                                            <% if(obrasSociales[i].idObraS == 13){%>
+                                                                <td>--</td>
+                                                                <%}else{%>
+                                                                    <td>
+                                                                        <%= obrasSociales[i].direccionObraS %>
+                                                                    </td>
+                                                                    <%}%>
+
+                                                                        <% if(obrasSociales[i].idObraS == 13){%>
+                                                                            <td>--</td>
+                                                                            <%}else{%>
+                                                                                <td>
+                                                                                    <%= obrasSociales[i].telefonoObraS %>
+                                                                                </td>
+                                                                                <%}%>
+
+                                                                                    <% if(obrasSociales[i].idObraS == 13){%>
+                                                                                        <td>--</td>
+                                                                                        <%}else{%>
+                                                                                            <td>
+                                                                                                <%= obrasSociales[i].emailObraS %>
+                                                                                            </td>
+                                                                                            <%}%>
+
+                                                                                                <td>
+
+                                                                                                    <% if(obrasSociales[i].idObraS != 13 && user.rol != 'doctor'){%>
+                                                                                                        <a href="/obrassociales/edit/<%=obrasSociales[i].idObraS %>" id="modificar" role="button" class="btn btn-secondary btn-sm">
+                                                                                                            <i class="fas fa-edit"></i>
+                                                                                                        </a>
+                                                                                                        <%}%>
+
+                                                                                                            <!-- <% if(isAuthenticated && user.rol=='director' && obrasSociales[i].idObraS != 13){%>
+                <a href="/obrassociales/delete/<%=obrasSociales[i].idObraS %>"
+                    onclick="return confirm('¿Seguro que desea eliminar?')" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+                <%}%> -->
+
+
+                                                                                                </td>
+
+                                                    </tr>
+                                                    <% }
+                            %>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>#</td>
+                                                <th>Obra Social</th>
+                                                <th>Domicilio</th>
+                                                <th>Teléfono</th>
+                                                <th>E-mail</th>
+                                                <th>Acciones</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+            </div>
+
+            <!-- Modal Agregar -->
+            <div class="modal fade" id="obraSocialModal" tabindex="-1" role="dialog" aria-labelledby="obraSocialModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="obraSocialModalLabel">Agregar Obra Social</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/obrassociales" method="post" class="card-body">
+                                <div class="form-group">
+                                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="phone" id="telefono" name="telefono" class="form-control" placeholder="Teléfono" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required>
+                                </div>
+
+                                <div class="modal-footer">
+                                </div>
+                                <input type="submit" value="Aceptar" id="Aceptar" class="btn btn-primary">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(() => {
+                $('#tabla_obras_sociales').DataTable({
+                    "language": {
+                        "lengthMenu": "Mostrar _MENU_ Registros por página",
+                        "zeroRecords": "No se encontraron resultados en su búsqueda.",
+                        "searchPlaceholder": "Buscar Obra Social",
+                        "info": "Mostrando registros del _START_ al _END_ de un total de _MAX_",
+                        "infoEmpty": "No existen registros.",
+                        "infoFiltered": "(Filtrado de un total de _MAX_ registros",
+                        "search": "Buscar:",
+                        "paginate": {
+                            "fist": "Primero",
+                            "last": "Último",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    },
+                });
+
+                $('#obraSocialModal').on('shown.bs.modal', function() {
+                    $('#nombre').trigger('focus')
+                });
+
+                $('#Enviar').click(() => {
+                    var nombre = ('#nombre').val();
+                    if (nombre == '') {
+                        $("#mensaje1").fadeIn("slow");
+                        return false;
+                    }
+                    //en otro caso, el mensaje no se muestra
+                    else {
+                        $("#mensaje1").fadeOut();
+                    }
+                });
+
+                $('#modificar').on('click', () => {
+                    $('#obraSModifModal').modal('show');
+                })
+
+            })
+        </script>
+        <script src="/js/abrirMenu.js"></script>
+</body>
+
+</html>

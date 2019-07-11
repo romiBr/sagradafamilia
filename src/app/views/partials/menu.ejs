@@ -1,0 +1,63 @@
+<div class="sidebar">
+    <% if(!isAuthenticated){%>
+        <h4>MENÚ</h4>
+    <%}%>
+    
+    <% if(isAuthenticated){%>
+        <h3><%=user.name%></h3>
+        <h5>(<%=user.rol%>)</h5>
+    <%}%>
+    
+    <ul>
+        <%# <li><a href="/home">Inicio</a></li> %>
+        <% if (isAuthenticated){ 
+            if(user.rol == 'secretaria' || user.rol == 'director'){%>
+                <li><a href="/turnos">Turnos</a></li>
+            <% } else if(user.rol =='doctor'){                
+            %>      
+                <li><a href='/turnos/medico/<%=user.idUser%>'>Mis Turnos</a></li>
+            <%}
+        }%>
+        <% if(isAuthenticated){
+            if(user.rol != 'doctor'){%>
+                <li><a href="/reportes">Reportes</a></li>
+            <%}
+        } %>  
+        
+        <%if (isAuthenticated){%>
+            <li><a href="/pacientes">Pacientes</a></li>
+            <li><a href="/obrassociales">Obras Sociales</a></li>
+        <%}%>
+        
+        <% if(isAuthenticated){
+            if(user.rol != 'doctor'){%>
+                <li><a href="/doctores">Doctores</a></li>
+            <%}
+        }
+        if(isAuthenticated){
+            if(user.rol == 'director'){%>
+                <li><a href="/especialidades">Especialidades</a></li>
+            <%} 
+        }%>
+        <%if (isAuthenticated){%>
+            <!--<li><a href="/users/panel">Cambiar Contraseña</a></li>-->
+        <%}%>        
+        
+        <% if(isAuthenticated && user.rol == 'director'){%>
+            <li><a href="/auth/signup">Agregar Usuarios</a></li>
+            <li><a href="/bancos">Administrar Bancos</a></li>
+            <li><a href="/modalidades">Administrar Modalidad de Pago</a></li>
+        <%}%>
+        <% if(!isAuthenticated){%>
+                <li><a href="/auth/signin">Iniciar Sesión</a></li>
+            <%}else{%>   
+            <li><a href="/auth/logout">Cerrar Sesión</a></li>
+        <%}%>
+    </ul>
+</div>
+<div id="loading-screen" style="display:none">
+    <img src="/img/spinning-circles.svg">
+</div>
+
+
+

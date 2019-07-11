@@ -1,0 +1,499 @@
+<% include ./header %>
+
+    <title>Agregar Doctor</title>
+</head>
+
+<body>
+    <%include ./menu %>
+    <div class="contenido abrir">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container navbar-brand">Agregar Doctor
+            </div>
+        </nav>
+        <br>
+        <i id="menu-bar" class="fas fa-bars fa-2x"></i>
+        <br>
+        <div class="col-7">
+            <br><br>
+            <div class="card">
+                <br>
+                <div class="card-body">
+                    <form action="/doctores" method="post">                        
+                            <div class="form-group">
+                                <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="mr-4">Sexo
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="radio" name="sexo" id="sexo1" value="f" checked>
+                                    <label class="form-check-label" for="sexo1">Mujer</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="radio" name="sexo" id="sexo2" value="m">
+                                    <label class="form-check-label" for="sexo2">Hombre</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" name='especialidades[]' id="especialidadesGroup" multiple="multiple" required>
+                                            
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" id="matricula" name="matricula" class="form-control" placeholder="Nº de matrícula" required>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required>
+                            </div>
+
+                            <div class="form-group">
+                                <select class="form-control" name='obrassociales[]' id="obrassocialesGroup" multiple="multiple" required>
+                                            
+                                </select>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" class="form-control" name="honorarios" placeholder="Honorarios Consulta" min=200 max=2000 required>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">.00</span>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h5>Días y Horarios de Consulta:</h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1" id="lunes">
+                                    <label class="form-check-label" for="lunes">
+                                        Lunes
+                                    </label>
+                                </div>
+                                <div id="horariosLunes" name="horariosLunes">
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="1" id="lunMan">
+                                        <label class="form-check-label" for="lunMan">
+                                            Mañana
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="lunManHora">
+                                        <div class="input-group col-4" id="reloj1" data-autoclose="true">
+                                            <input type="text" id="txtHora1" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj2" data-toggle="popover" data-container="body" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora2" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="2" id="lunTar">
+                                        <label class="form-check-label" for="lunTar">
+                                            Tarde
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="lunTarHora">
+                                        <div class="input-group col-4" id="reloj3">
+                                            <input type="text" id="txtHora3" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj4" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora4" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="2" id="martes">
+                                    <label class="form-check-label" for="martes">
+                                        Martes
+                                    </label>
+                                </div>
+
+                                <div id="horariosMartes">
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="1" id="martMan">
+                                        <label class="form-check-label" for="martMan">
+                                            Mañana
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="martManHora">
+                                        <div class="input-group col-4" id="reloj5">
+                                            <input type="text" id="txtHora5" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj6" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora6" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="2" id="martTar">
+                                        <label class="form-check-label" for="martTar">
+                                            Tarde
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="martTarHora">
+                                        <div class="input-group col-4" id="reloj7">
+                                            <input type="text" id="txtHora7" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj8" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora8" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="3" id="miercoles">
+                                    <label class="form-check-label" for="miercoles">
+                                        Miércoles
+                                    </label>
+                                </div>
+
+                                <div id="horariosMiercoles">
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="1" id="miercMan">
+                                        <label class="form-check-label" for="miercMan">
+                                            Mañana
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="miercManHora">
+                                        <div class="input-group col-4" id="reloj9">
+                                            <input type="text" id="txtHora9" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj10" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora10" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="2" id="miercTar">
+                                        <label class="form-check-label" for="miercTar">
+                                            Tarde
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="miercTarHora">
+                                        <div class="input-group col-4" id="reloj11">
+                                            <input type="text" id="txtHora11" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj12" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora12" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="4" id="jueves">
+                                    <label class="form-check-label" for="jueves">
+                                        Jueves
+                                    </label>
+                                </div>
+
+                                <div id="horariosJueves">
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="1" id="jueMan">
+                                        <label class="form-check-label" for="jueMan">
+                                            Mañana
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="jueManHora">
+                                        <div class="input-group col-4" id="reloj13">
+                                            <input type="text" id="txtHora13" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj14" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora14" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="2" id="jueTar">
+                                        <label class="form-check-label" for="jueTar">
+                                            Tarde
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="jueTarHora">
+                                        <div class="input-group col-4" id="reloj15">
+                                            <input type="text" id="txtHora15" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj16" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora16" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="5" id="viernes">
+                                    <label class="form-check-label" for="viernes">
+                                        Viernes
+                                    </label>
+                                </div>
+
+                                <div id="horariosViernes">
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="1" id="vierMan">
+                                        <label class="form-check-label" for="vierMan">
+                                            Mañana
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="vierManHora">
+                                        <div class="input-group col-4" id="reloj17">
+                                            <input type="text" id="txtHora17" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj18" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora18" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                    <div class="form-check m-2">
+                                        <input class="form-check-input" type="checkbox" value="2" id="vierTar">
+                                        <label class="form-check-label" for="vierTar">
+                                            Tarde
+                                        </label>
+                                    </div>
+                                    <div class="form-group row m-2" id="vierTarHora">
+                                        <div class="input-group col-4" id="reloj19">
+                                            <input type="text" id="txtHora19" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                            
+                                        </div>
+                                        <div class="input-group col-4" id="reloj20" data-toggle="popover" data-content="La segunda hora debe ser mayor a la primera.">
+                                            <input type="text" id="txtHora20" class="form-control">
+                                            <span class="input-group-text"><i class="far fa-clock"></i></span>                                                                                     
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                                
+                            <div class="form-group">                        
+                                <input type="submit" value="Agregar" id="Aceptar" class="btn btn-primary">
+                                <a href="/doctores" class="btn btn-secondary">Cancelar</a>
+                            </div>
+                        </form>
+                </div>
+            </div>
+        </div>
+</div>
+
+    <script>
+        $(document).ready(()=>{
+            $('#apellido').focus();
+            $.ajax({
+                url: '/doctores/especialidades',
+                success: function(especialidades){
+                    $("#especialidadesGroup").select2({
+                        placeholder: "Seleccionar especialidades...",
+                        theme:'bootstrap4'
+                        
+                    });
+                    let select = $('#especialidadesGroup');
+                        //select.html('');
+                        especialidades.forEach(especialidad => {
+                            select.append(`
+                                <option value=${especialidad.idEspecialidad}>${especialidad.nombreEspecialidad}</option>
+                            `)
+                        })
+                }
+            });
+
+            $.ajax({
+                url: '/doctores/obrassociales',
+                success: (obrassociales) =>{
+                    $('#obrassocialesGroup').select2({
+                        placeholder: 'Seleccionar Obras Sociales...',
+                        theme: 'bootstrap4'
+                    });                    
+                    let select = $('#obrassocialesGroup');
+                    obrassociales.forEach(obrasocial => {
+                        select.append(`
+                            <option value=${obrasocial.idObraS}>${obrasocial.nombreObraS}</option>
+                        `)
+                    });
+                    
+                }
+            });
+
+            dia('#horariosLunes','#lunes','#lunManHora','#lunMan', '#lunTarHora', '#lunTar','#txtHora1','#txtHora2','#txtHora3','#txtHora4');
+            dia('#horariosMartes','#martes','#martManHora','#martMan', '#martTarHora', '#martTar', '#txtHora5','#txtHora6','#txtHora7','#txtHora8');
+            dia('#horariosMiercoles','#miercoles','#miercManHora','#miercMan', '#miercTarHora', '#miercTar', '#txtHora9','#txtHora10','#txtHora11','#txtHora12')
+            dia('#horariosJueves','#jueves','#jueManHora','#jueMan', '#jueTarHora', '#jueTar', '#txtHora13','#txtHora14','#txtHora15','#txtHora16')
+            dia('#horariosViernes','#viernes','#vierManHora','#vierMan', '#vierTarHora', '#vierTar', '#txtHora17','#txtHora18','#txtHora19','#txtHora20')
+            
+            function dia (horarios, dia, diaManHora, diaMan, diaTarHora, diaTar, tx1, tx2, tx3, tx4){
+                $(horarios).hide();            
+
+                $(dia).on('change',()=>{
+                    let val = $(dia).prop('checked');
+                    if(val){
+                        $(horarios).show();
+                    }else{                    
+                        $(horarios).hide();
+                        
+                    }
+                });
+
+                $(diaManHora).hide();
+
+                $(diaMan).on('change',()=>{
+                    let val = $(diaMan).prop('checked');
+                    if(val){
+                        $(diaManHora).show();
+                    }else{
+                        $(diaManHora).hide();
+                    }
+                });
+
+                $(diaTarHora).hide();
+
+                $(diaTar).on('change',()=>{
+                    let val = $(diaTar).prop('checked');
+                    if(val){
+                        $(diaTarHora).show();
+                    }else{
+                        $(diaTarHora).hide();
+                    }
+                })
+
+                $(tx1).timepicker({
+                    timeFormat: 'HH:mm',
+                    interval: 15,
+                    scrollbar: false,
+                    minTime: '08:00',
+                    maxTime: '11:45',
+                    defaultTime: '8',
+                    dynamic: false,
+                    change: ()=>{
+                        if(tx1 == '#txtHora1'){
+                            if($('#txtHora1').val()>= $('#txtHora2').val()){ 
+                                //alert($('#txtHora1').val()+" - "+$('#txtHora2').val());                       
+                                $('#reloj2').popover('show');   
+                            }else{
+                                $('#reloj2').popover('hide'); 
+                            }
+                        };
+                        if(tx1 == '#txtHora5'){
+                            if($('#txtHora5').val()>= $('#txtHora6').val()){                        
+                                $('#reloj6').popover('show');   
+                            }else{
+                                $('#reloj6').popover('hide'); 
+                            }
+                        };
+                        if(tx1 == '#txtHora9'){
+                            if($('#txtHora9').val()>= $('#txtHora10').val()){                        
+                                $('#reloj10').popover('show');   
+                            }else{
+                                $('#reloj10').popover('hide'); 
+                            }
+                        };
+                        if(tx1 == '#txtHora13'){
+                            if($('#txtHora13').val()>= $('#txtHora14').val()){                        
+                                $('#reloj14').popover('show');   
+                            }else{
+                                $('#reloj14').popover('hide'); 
+                            }
+                        };
+                        if(tx1 == '#txtHora17'){
+                            if($('#txtHora17').val()>= $('#txtHora18').val()){                        
+                                $('#reloj18').popover('show');   
+                            }else{
+                                $('#reloj18').popover('hide'); 
+                            }
+                        };
+                    }
+                    
+                });
+
+                $(tx2).timepicker({
+                    timeFormat: 'HH:mm',
+                    interval: 15,
+                    scrollbar: false,
+                    minTime: '08:15',
+                    maxTime: '12:00',
+                    defaultTime: '12',
+                    dynamic: false,
+                    change: ()=>{
+                        if(tx2 == '#txtHora2'){
+                            if($('#txtHora1').val()>= $('#txtHora2').val()){
+                                //alert($('#txtHora1').val()+" - "+$('#txtHora2').val());                        
+                                $('#reloj2').popover('show');   
+                            }else{
+                                $('#reloj2').popover('hide'); 
+                            }
+                        };
+                        if(tx2 == '#txtHora6'){
+                            if($('#txtHora5').val()>= $('#txtHora6').val()){                        
+                                $('#reloj6').popover('show');   
+                            }else{
+                                $('#reloj6').popover('hide'); 
+                            }
+                        };
+                        ;
+                        if(tx2 == '#txtHora10'){
+                            if($('#txtHora9').val()>= $('#txtHora10').val()){                        
+                                $('#reloj10').popover('show');   
+                            }else{
+                                $('#reloj10').popover('hide'); 
+                            }
+                        };
+                        if(tx2 == '#txtHora14'){
+                            if($('#txtHora13').val()>= $('#txtHora14').val()){                        
+                                $('#reloj14').popover('show');   
+                            }else{
+                                $('#reloj14').popover('hide'); 
+                            }
+                        };
+                        if(tx2 == '#txtHora18'){
+                            if($('#txtHora17').val()>= $('#txtHora18').val()){                        
+                                $('#reloj18').popover('show');   
+                            }else{
+                                $('#reloj18').popover('hide'); 
+                            }
+                        };
+                    }
+                    
+
+                });
+
+                $(tx3).timepicker({
+                    timeFormat: 'HH:mm',
+                    interval: 15,
+                    scrollbar: false,
+                    minTime: '16:00',
+                    maxTime: '20:45',
+                    defaultTime: '16',
+                    dynamic: false
+
+                });
+
+                $(tx4).timepicker({
+                    timeFormat: 'HH:mm',
+                    interval: 15,
+                    scrollbar: false,
+                    minTime: '16:15',
+                    maxTime: '20:00',
+                    defaultTime: '20',
+                    dynamic: false
+
+                })
+            };
+
+            
+
+        })
+    </script>   
+    <script src="/js/abrirMenu.js"></script>
+
+</body>
+</html>

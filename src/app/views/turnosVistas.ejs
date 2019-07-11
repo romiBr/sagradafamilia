@@ -1,0 +1,1431 @@
+<% include ./partials/header %>
+    <link rel="stylesheet" href="/css/fullcalendar.min.css">
+    <script src="/js/fullcalendar.min.js"></script>
+    <script src="/js/es.js"></script>
+
+
+    <title>Turnos</title>
+    </head>
+
+    <body>
+        <%include ./partials/menu %>
+
+            <div class="contenido abrir">
+
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                    <div class="navbar-brand">Turnos</div>
+                </nav>
+
+                <i id="menu-bar" class="fas fa-bars fa-2x m-2"></i>
+
+                <div class="container">
+                    <input type="hidden" id="bajaDoctor">
+                    <div class="col-10">
+                        <form>
+                            <div class="form-row align-items-center">
+                                <select id="especialidadselect" name="especialidad" class="custom-select col-4 m-2">
+                    <option selected>Seleccione especialidad...</option> 
+                    <% for(var i=0; i<especialidades.length; i++) { %>
+                    <option id="especialidadSelect" value=<%=especialidades[i].idEspecialidad%>> <%=especialidades[i].nombreEspecialidad%></option>
+                    <%}%>
+                </select>
+                                <select id="doctoresselect" name="doctor" class="custom-select col-4 m-2">
+                        
+                </select>
+                                <label class="ml-2" id="textoDocInactivo" style="color:red;">
+            </div>  
+        </form>
+        
+        <div class="pt-3">
+            <div class="card">
+                <div class="card-header">
+                    Mañana
+                </div>
+                <div class="card-body">
+                    <div id="cal_turnos_man"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-3">
+            <div class="card">
+                <div class="card-header">
+                    Tarde
+                </div>
+                <div class="card-body">
+                    <div id="cal_turnos_tar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>   
+    
+    </div>        
+    
+
+    <!-- Modal -->
+    <div class="modal fade" id="turnoModal" style="overflow-y: auto; data-backdrop="false" role="dialog" aria-labelledby="turnoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="turnoModalLabel">Agregar Turno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-header">                            
+                            <div class="row">
+                                <input type="hidden" id="fechaTurnoInput">
+                                <label class="col">Fecha:</label>
+                                <label id="fechaTurno" class="col"></label>
+                            </div>
+                            <div class="row">
+                                <label class="col">Hora:</label>
+                                <label id="horaTurno" class="col"></label>
+                            </div>
+
+                            <div class="row">
+                                <label class="col">Doctor:</label>
+                                <label id="doctorTurno" class="col"></label>
+                            </div>
+                            <div class="row">
+                                <label class="col">Especialidad:</label>
+                                <label id="especialidadTurno" class="col"></label>
+                            </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="hidden" id="idPacienteElegido">
+                            <input type="text" class="form-control" id="pacienteElegido" placeholder="Seleccionar Paciente..." disabled required>
+                            <div class="input-group-append">
+                                <a href="#" class="btn btn-outline-primary" id="botonModal1" role="button" data-toggle="modal" data-target="#pacienteModal">...</a>
+                            </div>
+                        </div>
+                        <div class="form-row align-items-center mb-2 pago" id="obraSsi">
+                            <div class="col-auto">
+                                <label for="obraSSelect">Obra Social Seleccionada:
+                                </div>
+                                <div class="col-auto">
+                                    <select name="obraSSelect" id="obraSSelect" class="custom-select"></select>
+                                </div>                                
+                                
+                            </div>
+                            <div class="mb-2 pago" id="obraSno">
+                                <div class="form-row align-items-center">
+                                    <div class="col-auto">
+                                        <label for="honorarios">Honorarios Médicos:</label>
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input type="number" class="form-control" id="honorarios" name="honorarios" min=200 max=2000 disabled>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row align-items-center">
+                            <div class="col-auto">
+                                <label for="metodologia">Metodología de Pago:</label>
+                            </div>
+                            <div class="col-auto">
+                                <select class="form-control" id="metodologia" name="metodologia">
+                                        </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row align-items-center mt-3" id="bancoGroup">
+                            <div class="col-auto">
+                                <label for="banco">Banco:</label>
+                            </div>
+                            <div class="col-auto">
+                                <select class="form-control" id="banco" name="banco">
+                                        </select>
+                            </div>
+                        </div>
+
+                        <div id="payment" class="mt-3">
+                            <div class="row">
+                                <div class="form-group col mr-2 owner">
+                                    <label for="owner">Titular</label>
+                                    <input type="text" class="form-control" id="owner" required>
+                                </div>
+                                <div class="form-group col ml-2 CVV">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" required>
+                                </div>
+                            </div>
+                            <div class="form-group" id="card-number-field">
+                                <label for="cardNumber">Número de tarjeta</label>
+                                <input type="text" class="form-control" id="cardNumber" required>
+                            </div>
+                            <div class="form-group" id="expiration-date">
+
+                                <div class="form-group">
+                                    <label>Fecha Vencimiento</label>
+                                    <div class="row mr-2 ml-2">
+                                        <select class="form-control col mr-2">
+                                                <option value="01">Enero</option>
+                                                <option value="02">Febrero</option>
+                                                <option value="03">Marzo</option>
+                                                <option value="04">Abril</option>
+                                                <option value="05">Mayo</option>
+                                                <option value="06">Junio</option>
+                                                <option value="07">Julio</option>
+                                                <option value="08">Agosto</option>
+                                                <option value="09">Septiembre</option>
+                                                <option value="10">Octubre</option>
+                                                <option value="11">Noviembre</option>
+                                                <option value="12">Deciembre</option>
+                                            </select>
+                                        <select class="form-control col ml-2">
+                                                <option value="16"> 2019</option>
+                                                <option value="17"> 2020</option>
+                                                <option value="18"> 2021</option>
+                                                <option value="19"> 2022</option>
+                                                <option value="20"> 2023</option>
+                                                <option value="21"> 2024</option>
+                                            </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="credit_cards">
+                                <img src="img/visa.jpg" id="visa">
+                                <img src="img/mastercard.jpg" id="mastercard">
+                                <img src="img/amex.jpg" id="amex">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!--<div class="form-group">
+                                <label for="comentario">Comentario:</label>
+                                <textarea class="form-control" id="comentario" rows="1"></textarea>
+                            </div>-->
+
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnAgregar" class="btn btn-primary">Aceptar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+            </div>
+            </div>
+            </div>
+
+            <!-- Modal Modificar-Borrar-->
+            <div class="modal fade" id="turnoModalCambios" data-backdrop="false" role="dialog" aria-labelledby="turnoModalCambiosLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="turnoModalCambiosLabel">Modificar Turno</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <input type="hidden" id="idTurnoCambios">
+                                        <input type="hidden" id="fechaTurnoInputCambios">
+                                        <label class="col">Fecha:</label>
+                                        <label id="fechaTurnoCambios" class="col"></label>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col">Hora:</label>
+                                        <label id="horaTurnoCambios" class="col"></label>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col">Doctor:</label>
+                                        <label id="doctorTurnoCambios" class="col"></label>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col">Especialidad:</label>
+                                        <label id="especialidadTurnoCambios" class="col"></label>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="input-group mb-3">
+                                        <input type="hidden" id="idPacienteElegidoCambios">
+                                        <input type="text" class="form-control" id="pacienteElegidoCambios" placeholder="Paciente" disabled required>
+                                        <!--<div class="input-group-append">
+                                    <a href="#" class="btn btn-outline-primary" id="botonModalCambios" role="button" data-toggle="modal" data-target="#pacienteModal">...</a>
+                                </div>-->
+                                    </div>
+
+                                    <div class="form-row align-items-center mb-2 pago" id="obraSsiC">
+                                        <div class="col-auto">
+                                            <label for="obraSSelect">Obra Social:
+                                </div>
+                                <div class="col-auto">
+                                    <input name="obraSSelect" id="obraSSelectC" class="form-control" disabled>
+                                </div>                                
+                                
+                            </div>
+                            <div class="mb-2 pago" id="obraSnoC">
+                                <div class="form-row align-items-center">
+                                    <div class="col-auto">
+                                        <label for="honorarios">Honorarios Médicos:</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="number" class="form-control" id="honorariosC" name="honorarios" min=200 max=2000 disabled>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row align-items-center">
+                                        <div class="col-auto">
+                                            <label for="metodologiaC">Metodología de Pago:</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <input class="form-control" id="metodologiaC" name="metodologia" disabled>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row align-items-center mt-3" id="bancoGroupC">
+                                        <div class="col-auto">
+                                            <label for="metodologiaC">Banco:</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <input class="form-control" id="bancoC" name="bancoC" disabled>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnEnSalaTurno" class="btn btn-warning">En Sala</button>
+                        <button type="button" id="btnAusenteTurno" class="btn btn-danger">Ausente</button>
+                        <!--<button type="button" id="btnModificarTurno" class="btn btn-success">Modificar Turno</button>-->
+                        <button type="button" id="btnBorrarTurno" class="btn btn-danger">Borrar Turno</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Modal Tabla Pacientes -->
+            <div class="modal fade" data-backdrop="false" id="pacienteModal" role="dialog" aria-labelledby="pacienteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pacienteModalLabel">Seleccionar Paciente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="container">
+                                <div class="row">
+                                    <input type='button' class="btn btn-primary agregar" id="botonModal2" data-toggle="modal" data-target="#pacienteAgregarModal" value='Agregar Paciente'>
+                                </div>
+
+                                <div class="row">
+                                    <div class="container">
+                                        <table id="tabla_pacientes" class="table  table-striped table-responsive">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</td>
+                                                        <th>Apellido</th>
+                                                        <th>Nombre</th>
+                                                        <th>DNI</th>
+                                                        <th>Obra Social</th>
+                                                        <th>Teléfono</th>
+                                                        <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>#</td>
+                                                        <th>Apellido</th>
+                                                        <th>Nombre</th>
+                                                        <th>DNI</th>
+                                                        <th>Obra Social</th>
+                                                        <th>Teléfono</th>
+                                                        <th>Acciones</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Agregar Paciente -->
+            <div class="modal fade" data-backdrop="false" data-backdrop="static" id="pacienteAgregarModal" role="dialog" aria-labelledby="pacienteAgregarModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pacienteAgregarModalLabel">Agregar Paciente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="card">
+                                <form action="/turnos/pacientes" method="post">
+                                    <div class="card-body">
+                                        <span id="alerta" class="badge badge-danger mb-2">Completar Campos Requeridos</span>
+                                        <div class="form-group">
+                                            <input type="text" id="apellido" name="apellido" class="form-control" placeholder="Apellido" required>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <input type="number" id="dni" name="dni" class="form-control" placeholder="Documento" required>
+                                                </div>
+                                                <div class="col">
+                                                    <input type="date" id="fNac" name="fNac" class="form-control" placeholder="Fecha Nacimiento" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="phone" id="telefono" name="telefono" class="form-control" placeholder="Teléfono" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <select style="width:250px" class="form-control" name='obrasSociales[]' id="obrasSocialesGroup" multiple="multiple" required>
+                                                                        
+                                </select>
+                                                </div>
+                                                <div class="col">
+                                                    <input type="text" id="nroAfil" name="nroAfil" class="form-control" placeholder="Nº Afiliado" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" id="btnAgregarPaciente">Aceptar</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                        </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <script>
+                            $(document).ready(() => {
+                                $('#obraSSelect').empty();
+
+                                $('#especialidadselect').change(() => {
+                                    $('#textoDocInactivo').html("");
+                                    $('#turnoHorario').hide();
+                                    let select = $('#doctoresselect');
+                                    select.empty();
+                                    select.append(`
+                    <option selected>Seleccione médico...</option> 
+                `)
+                                    var especialidadSeleccionada = $('select[id=especialidadselect]').val();
+                                    $('#cal_turnos_man').fullCalendar('destroy');
+                                    $('#cal_turnos_tar').fullCalendar('destroy');
+                                    if (especialidadSeleccionada != 'Seleccione especialidad...') {
+                                        $.ajax({
+                                            url: '/turnos/doctores/' + especialidadSeleccionada,
+                                            success: (doctores) => {
+                                                let select = $('#doctoresselect');
+                                                doctores.forEach(doctor => {
+                                                    select.append(`                                
+                        <option value=${doctor.idDoctor}>${doctor.apellidoDoctor+' '+doctor.nombreDoctor}</option>
+                        `)
+                                                })
+                                            }
+                                        })
+                                    }
+
+                                });
+
+                                $('#banco').empty();
+
+
+
+                                $('#doctoresselect').change(() => {
+                                    $('#textoDocInactivo').html("");
+                                    var doctorSeleccionado = $('select[id=doctoresselect]').val();
+                                    $('#cal_turnos_man').fullCalendar('destroy');
+                                    $('#cal_turnos_tar').fullCalendar('destroy');
+                                    if (doctorSeleccionado != 'Seleccione médico...') {
+                                        $.ajax({
+                                            url: '/turnos/doctor/' + doctorSeleccionado,
+                                            success: (doctor) => {
+                                                $('#bajaDoctor').val(doctor[0].baja);
+                                                if (doctor[0].baja == 1) {
+                                                    $('#textoDocInactivo').html("Doctor Inactivo!!");
+                                                }
+
+                                            }
+                                        });
+                                        $.ajax({
+                                            url: '/turnos/eventos/' + doctorSeleccionado,
+
+                                            success: (eventos) => {
+                                                //$('#honorariosDoctor').val(eventos[0].honorarioDoctor);
+                                                var i = 0;
+                                                var grupoEventos = [];
+                                                var color;
+                                                eventos.forEach(evento => {
+                                                    if (evento.atendido == 0) {
+                                                        color = '#2E9AFE';
+                                                    } else if (evento.atendido == 1) {
+                                                        color = '#04B404';
+                                                    } else if (evento.atendido == 2) {
+                                                        color = '#FFFF00';
+                                                    } else if (evento.atendido == 3) {
+                                                        color = '#FE2E2E'
+                                                    }
+                                                    grupoEventos[i] =
+
+                                                        {
+                                                            'idTurno': evento.idTurno,
+                                                            'title': evento.apellidoPaciente + " " + evento.nombrePaciente,
+                                                            'start': evento.start,
+                                                            'idPaciente': evento.id,
+                                                            'idDoctor': evento.idDoctor,
+                                                            'idObraSocial': evento.idObraS,
+                                                            'valorConsulta': evento.valorConsulta,
+                                                            'atendido': evento.atendido,
+                                                            'idBanco': evento.idBanco,
+                                                            'idModalidad': evento.idModalidad,
+                                                            'color': color
+                                                        }
+
+                                                    i++;
+                                                });
+
+                                                $('#cal_turnos_man').fullCalendar({
+                                                    header: {
+                                                        left: 'today,prev,next',
+                                                        center: 'title',
+                                                        right: 'agendaDay,month,agendaWeek,listaPorDosDias'
+                                                    },
+
+                                                    views: {
+                                                        listaPorDosDias: {
+                                                            type: 'listWeek',
+                                                            duration: {
+                                                                days: 2
+                                                            }
+                                                        }
+                                                    },
+
+                                                    minTime: "08:00:00",
+                                                    maxTime: "12:00:00",
+                                                    defaultTimedEventDuration: '00:15:00',
+                                                    forceEventDuration: true,
+                                                    allDaySlot: false,
+                                                    selectable: true,
+                                                    eventLimit: true,
+
+
+                                                    dayClick: function(fecha, jsEvent, view) {
+                                                        if ($('#bajaDoctor').val() == 1) {
+                                                            alert('El doctor se encuentra deshabilitado.');
+                                                        } else {
+
+                                                            var hoy = moment(new Date());
+                                                            var fechaSel = moment(fecha);
+                                                            if (view.name != 'month') {
+
+                                                                if (moment(fechaSel).isBefore(hoy)) {
+                                                                    alert('No se puede sacar turno. Fecha/Hora anterior.');
+                                                                } else {
+                                                                    var unaSemana = moment().add(7, 'days');
+                                                                    if (moment(fechaSel).isBefore(unaSemana)) {
+                                                                        var dia = fecha.format("DD/MM/YYYY");
+                                                                        var hora = fecha.format("HH:mm");
+                                                                        $('#fechaTurno').html(dia);
+                                                                        $('#fechaTurnoInput').val(fecha.format("YYYY-MM-DD") + " " + fecha.format("HH:mm:ss"));
+                                                                        $('#horaTurno').html(hora + " hs.");
+                                                                        var dr = $('#doctoresselect option:selected').text();
+                                                                        var id = $('#doctoresselect option:selected').val();
+                                                                        $('#doctorTurno').html(dr);
+                                                                        $('#especialidadTurno').html($('#especialidadselect option:selected').text());
+                                                                        $.ajax({
+                                                                            url: '/turnos/doctor/' + id,
+                                                                            success: (doctor) => {
+                                                                                $('#honorarios').val(doctor[0].honorarioDoctor);
+                                                                            }
+                                                                        });
+
+
+                                                                        $('#turnoModal').modal('toggle');
+                                                                        limpiarFormulario();
+                                                                    } else {
+                                                                        alert('No se pueden dar turnos con más de una semana de anticipación.')
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+                                                    },
+
+                                                    eventClick: (event, jsEvent, view) => {
+                                                        var hoy = moment(new Date());
+                                                        var fechaSel = event.start;
+                                                        if (view.name != 'month') {
+                                                            if (moment(fechaSel).isBefore(hoy)) {
+                                                                alert('No se puede cambiar turno. Fecha/Hora anterior.');
+                                                            } else {
+                                                                if (event.atendido != 0) {
+                                                                    $('#btnEnSalaTurno').hide();
+                                                                    $('#btnModificarTurno').hide();
+                                                                } else {
+                                                                    $('#btnEnSalaTurno').show();
+                                                                    $('#btnModificarTurno').show();
+                                                                }
+                                                                if (event.atendido == 3) {
+                                                                    $('#btnAusenteTurno').hide();
+                                                                    $('#btnBorrarTurno').hide();
+                                                                } else {
+                                                                    $('#btnAusenteTurno').show();
+                                                                    $('#btnBorrarTurno').show();
+                                                                }
+                                                                var f = fechaSel.format("DD/MM/YYYY");
+                                                                var h = fechaSel.format("HH:mm");
+                                                                $('#fechaTurnoCambios').html(f);
+                                                                $('#fechaTurnoCambiosInput').val(fechaSel.format("YYYY-MM-DD") + " " + fechaSel.format("HH:mm:ss"));
+                                                                $('#horaTurnoCambios').html(h + " hs.");
+                                                                var dr = $('#doctoresselect option:selected').text();
+                                                                var id = $('#doctoresselect option:selected').val();
+                                                                $('#doctorTurnoCambios').html(dr);
+                                                                $('#especialidadTurnoCambios').html($('#especialidadselect option:selected').text());
+                                                                $('#idPacienteElegidoCambios').val(event.idPaciente);
+                                                                $('#pacienteElegidoCambios').val(event.title);
+                                                                $('#idTurnoCambios').val(event.idTurno);
+                                                                $.ajax({
+                                                                    url: '/turnos/obras/' + event.idObraSocial,
+                                                                    success: (obra) => {
+                                                                        $('#obraSSelectC').val(obra[0].nombreObraS);
+                                                                    }
+                                                                });
+                                                                if (event.idObraSocial != 13) {
+                                                                    $('#obraSnoC').hide();
+
+                                                                } else {
+                                                                    $('#obraSnoC').show();
+                                                                    if (event.idModalidad == 1 || event.idModalidad == 2) {
+                                                                        $('#bancoGroupC').hide();
+                                                                    } else {
+                                                                        $('#bancoGroupC').show();
+                                                                        $.ajax({
+                                                                            url: '/turnos/banco/' + event.idBanco,
+                                                                            success: (banco) => {
+                                                                                $('#bancoC').val(banco[0].nombreBanco);
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                    $('#honorariosC').val(event.valorConsulta);
+                                                                    $.ajax({
+                                                                        url: '/turnos/modalidad/' + event.idModalidad,
+                                                                        success: (modalidad) => {
+                                                                            $('#metodologiaC').val(modalidad[0].nombreModalidad);
+                                                                        }
+                                                                    })
+                                                                }
+                                                                $('#turnoModalCambios').modal('show');
+
+                                                            }
+                                                        }
+
+
+                                                    },
+
+                                                    editable: true,
+                                                    eventDurationEditable: false,
+
+                                                    timezone: 'local',
+
+                                                    height: 470,
+
+                                                    events: grupoEventos,
+
+
+                                                    firstDay: moment(new Date()).weekday() + 1,
+
+                                                    weekends: false,
+                                                    defaultView: 'agendaWeek',
+                                                    slotDuration: '00:15:00',
+                                                    slotLabelInterval: '00:15:00',
+                                                    slotLabelFormat: 'HH:mm',
+                                                    navLinks: true,
+
+                                                    eventOverlap: false,
+
+                                                });
+
+
+
+                                                $('#cal_turnos_tar').fullCalendar({
+                                                    header: {
+                                                        left: 'today,prev,next',
+                                                        center: 'title',
+                                                        right: 'agendaDay,month,agendaWeek,listaPorDosDias'
+                                                    },
+
+                                                    views: {
+                                                        listaPorDosDias: {
+                                                            type: 'listWeek',
+                                                            duration: {
+                                                                days: 2
+                                                            }
+                                                        }
+                                                    },
+
+                                                    minTime: "16:00:00",
+                                                    maxTime: "20:00:00",
+                                                    defaultTimedEventDuration: '00:15:00',
+                                                    forceEventDuration: true,
+                                                    allDaySlot: false,
+                                                    selectable: true,
+                                                    eventLimit: true,
+
+
+                                                    dayClick: function(fecha, jsEvent, view) {
+                                                        var hoy = moment(new Date());
+                                                        var fechaSel = moment(fecha);
+                                                        if (view.name != 'month') {
+
+                                                            if (moment(fechaSel).isBefore(hoy)) {
+                                                                alert('No se puede sacar turno. Fecha/Hora anterior.');
+                                                            } else {
+                                                                var unaSemana = moment().add(7, 'days');
+                                                                if (moment(fechaSel).isBefore(unaSemana)) {
+                                                                    var dia = fecha.format("DD/MM/YYYY");
+                                                                    var hora = fecha.format("HH:mm");
+                                                                    $('#fechaTurno').html(dia);
+                                                                    $('#fechaTurnoInput').val(fecha.format("YYYY-MM-DD") + " " + fecha.format("HH:mm:ss"));
+                                                                    $('#horaTurno').html(hora + " hs.");
+                                                                    var dr = $('#doctoresselect option:selected').text();
+                                                                    var id = $('#doctoresselect option:selected').val();
+                                                                    $('#doctorTurno').html(dr);
+                                                                    $('#especialidadTurno').html($('#especialidadselect option:selected').text());
+                                                                    $.ajax({
+                                                                        url: '/turnos/doctor/' + id,
+                                                                        success: (doctor) => {
+                                                                            $('#honorarios').val(doctor[0].honorarioDoctor);
+                                                                        }
+                                                                    });
+
+
+                                                                    $('#turnoModal').modal('toggle');
+                                                                    limpiarFormulario();
+                                                                } else {
+                                                                    alert('No se pueden dar turnos con más de una semana de anticipación.')
+                                                                }
+                                                            }
+                                                        }
+
+
+                                                    },
+
+                                                    eventClick: (event, jsEvent, view) => {
+                                                        var hoy = moment(new Date());
+                                                        var fechaSel = event.start;
+                                                        if (view.name != 'month') {
+                                                            if (moment(fechaSel).isBefore(hoy)) {
+                                                                alert('No se puede cambiar turno. Fecha/Hora anterior.');
+                                                            } else {
+                                                                if (event.atendido != 0) {
+                                                                    $('#btnEnSalaTurno').hide();
+                                                                    $('#btnModificarTurno').hide();
+                                                                    $('#btnAusenteTurno').hide();
+
+                                                                } else {
+                                                                    $('#btnEnSalaTurno').show();
+                                                                    $('#btnModificarTurno').show();
+                                                                    $('#btnAusenteTurno').show();
+                                                                }
+                                                                if (event.atendido == 3) {
+                                                                    $('#btnAusenteTurno').hide();
+                                                                    $('#btnBorrarTurno').hide();
+                                                                } else {
+                                                                    $('#btnAusenteTurno').show();
+                                                                    $('#btnBorrarTurno').show();
+                                                                }
+                                                                var f = fechaSel.format("DD/MM/YYYY");
+                                                                var h = fechaSel.format("HH:mm");
+                                                                $('#fechaTurnoCambios').html(f);
+                                                                $('#fechaTurnoCambiosInput').val(fechaSel.format("YYYY-MM-DD") + " " + fechaSel.format("HH:mm:ss"));
+                                                                $('#horaTurnoCambios').html(h + " hs.");
+                                                                var dr = $('#doctoresselect option:selected').text();
+                                                                var id = $('#doctoresselect option:selected').val();
+                                                                $('#doctorTurnoCambios').html(dr);
+                                                                $('#especialidadTurnoCambios').html($('#especialidadselect option:selected').text());
+                                                                $('#idPacienteElegidoCambios').val(event.idPaciente);
+                                                                $('#pacienteElegidoCambios').val(event.title);
+                                                                $('#idTurnoCambios').val(event.idTurno);
+                                                                $.ajax({
+                                                                    url: '/turnos/obras/' + event.idObraSocial,
+                                                                    success: (obra) => {
+                                                                        $('#obraSSelectC').val(obra[0].nombreObraS);
+                                                                    }
+                                                                });
+                                                                if (event.idObraSocial != 13) {
+                                                                    $('#obraSnoC').hide();
+
+                                                                } else {
+                                                                    $('#obraSnoC').show();
+                                                                    if (event.idModalidad == 1 || event.idModalidad == 2) {
+                                                                        $('#bancoGroupC').hide();
+                                                                    } else {
+                                                                        $('#bancoGroupC').show();
+                                                                        $.ajax({
+                                                                            url: '/turnos/banco/' + event.idBanco,
+                                                                            success: (banco) => {
+                                                                                $('#bancoC').val(banco[0].nombreBanco);
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                    $('#honorariosC').val(event.valorConsulta);
+                                                                    $.ajax({
+                                                                        url: '/turnos/modalidad/' + event.idModalidad,
+                                                                        success: (modalidad) => {
+                                                                            $('#metodologiaC').val(modalidad[0].nombreModalidad);
+                                                                        }
+                                                                    })
+                                                                }
+                                                                $('#turnoModalCambios').modal('show');
+
+                                                            }
+                                                        }
+
+
+                                                    },
+
+                                                    editable: true,
+                                                    eventDurationEditable: false,
+
+                                                    timezone: 'local',
+
+                                                    height: 470,
+
+                                                    events: grupoEventos,
+
+
+                                                    firstDay: moment(new Date()).weekday() + 1,
+
+
+
+                                                    editable: true,
+                                                    eventDurationEditable: false,
+
+                                                    timezone: 'local', //para que muestre la hora local y no el de la BD
+
+
+                                                    height: 470,
+                                                    weekends: false,
+                                                    defaultView: 'agendaWeek',
+                                                    slotDuration: '00:15:00', //duración de cada turno
+                                                    slotLabelInterval: '00:15:00', //tamaño de cada fila del calendario
+                                                    slotLabelFormat: 'HH:mm', //formato de la hora
+                                                    navLinks: true,
+
+                                                    firstDay: moment(new Date()).weekday() + 1,
+                                                    eventOverlap: false, //para que los turnos no se solapen     
+
+                                                });
+
+                                            }
+
+                                        });
+                                    }
+                                });
+
+                                $('#btnAgregar').click(() => {
+                                    var nuevoTurno;
+                                    var doctorSeleccionado = $('select[id=doctoresselect]').val();
+                                    var grupoEventos = [];
+                                    if ($('#obraSsi').is(':visible')) {
+                                        nuevoTurno = {
+                                            start: $('#fechaTurnoInput').val(),
+                                            idDoctor: $('#doctoresselect').val(),
+                                            idPaciente: $('#idPacienteElegido').val(),
+                                            idObraSocial: $('#obraSSelect').val(),
+                                            valor: 0,
+                                            idModalidad: 1
+
+                                        };
+                                    } else {
+                                        nuevoTurno = {
+                                            start: $('#fechaTurnoInput').val(),
+                                            idDoctor: $('#doctoresselect').val(),
+                                            idPaciente: $('#idPacienteElegido').val(),
+                                            idObraSocial: 13,
+                                            valor: $('#honorarios').val(),
+                                            idModalidad: $('#metodologia :selected').val(),
+                                            idBanco: $('#banco :selected').val()
+                                        };
+                                    }
+
+                                    var id = $('#idPacienteElegido').val();
+
+
+
+                                    $.ajax({
+                                        type: 'post',
+                                        url: '/turnos/agregar/turno',
+                                        data: nuevoTurno,
+                                        success: (resul) => {
+                                            armarEvents(doctorSeleccionado, grupoEventos);
+                                            setTimeout(() => {
+                                                $('#cal_turnos_man').fullCalendar('removeEvents');
+                                                $('#cal_turnos_man').fullCalendar('addEventSource', grupoEventos);
+                                                $('#cal_turnos_man').fullCalendar('rerenderEvents');
+                                                $('#cal_turnos_tar').fullCalendar('removeEvents');
+                                                $('#cal_turnos_tar').fullCalendar('addEventSource', grupoEventos);
+                                                $('#cal_turnos_tar').fullCalendar('rerenderEvents');
+                                                alert("Turno agregado correctamente.");
+                                                $('#turnoModal').modal('toggle');
+                                            }, 2000);
+
+                                        },
+
+                                    });
+
+
+                                });
+
+                                $('#btnBorrarTurno').click(() => {
+                                    var result = confirm("¿Seguro que desea borrar el turno?");
+                                    var doctorSeleccionado = $('select[id=doctoresselect]').val();
+                                    var grupoEventos = [];
+                                    if (result) {
+                                        $.ajax({
+                                            url: '/turnos/borrar/' + $('#idTurnoCambios').val(),
+                                            success: (resul) => {
+                                                alert("Turno borrado exitosamente.");
+                                                armarEvents(doctorSeleccionado, grupoEventos);
+                                                setTimeout(() => {
+                                                    $('#cal_turnos_man').fullCalendar('removeEvents');
+                                                    $('#cal_turnos_man').fullCalendar('addEventSource', grupoEventos);
+                                                    $('#cal_turnos_man').fullCalendar('rerenderEvents');
+                                                    $('#cal_turnos_tar').fullCalendar('removeEvents');
+                                                    $('#cal_turnos_tar').fullCalendar('addEventSource', grupoEventos);
+                                                    $('#cal_turnos_tar').fullCalendar('rerenderEvents');
+                                                    $('#turnoModalCambios').modal('toggle');
+                                                }, 2000);
+
+
+                                            }
+                                        })
+                                    }
+                                });
+
+
+                                $('#btnAusenteTurno').click(() => {
+                                    var respuesta = confirm('¿Desea cambiar estado de Turno a "Ausente"?');
+                                    var doctorSeleccionado = $('select[id=doctoresselect]').val();
+                                    var grupoEventos = [];
+                                    if (respuesta) {
+                                        var id = $('#idTurnoCambios').val();
+                                        $.ajax({
+                                            url: '/turnos/ausente/' + id,
+                                            success: (resp) => {
+
+                                                armarEvents(doctorSeleccionado, grupoEventos);
+                                                setTimeout(() => {
+                                                    $('#cal_turnos_man').fullCalendar('removeEvents');
+                                                    $('#cal_turnos_man').fullCalendar('addEventSource', grupoEventos);
+                                                    $('#cal_turnos_man').fullCalendar('rerenderEvents');
+                                                    $('#cal_turnos_tar').fullCalendar('removeEvents');
+                                                    $('#cal_turnos_tar').fullCalendar('addEventSource', grupoEventos);
+                                                    $('#cal_turnos_tar').fullCalendar('rerenderEvents');
+                                                    $('#turnoModalCambios').modal('toggle');
+                                                    alert('Turno cambiado a "Ausente" exitosamente.');
+                                                }, 2000);
+                                            }
+                                        })
+                                    }
+                                })
+
+                                $('#btnEnSalaTurno').click(() => {
+                                    var respuesta = confirm('¿Desea cambiar estado de Turno a "En Sala"?');
+                                    var doctorSeleccionado = $('select[id=doctoresselect]').val();
+                                    var grupoEventos = [];
+                                    if (respuesta) {
+                                        var id = $('#idTurnoCambios').val();
+                                        $.ajax({
+                                            url: '/turnos/ensala/' + id,
+                                            success: (resp) => {
+
+                                                armarEvents(doctorSeleccionado, grupoEventos);
+                                                setTimeout(() => {
+                                                    $('#cal_turnos_man').fullCalendar('removeEvents');
+                                                    $('#cal_turnos_man').fullCalendar('addEventSource', grupoEventos);
+                                                    $('#cal_turnos_man').fullCalendar('rerenderEvents');
+                                                    $('#cal_turnos_tar').fullCalendar('removeEvents');
+                                                    $('#cal_turnos_tar').fullCalendar('addEventSource', grupoEventos);
+                                                    $('#cal_turnos_tar').fullCalendar('rerenderEvents');
+                                                    $('#turnoModalCambios').modal('toggle');
+                                                    alert('Turno cambiado a "En sala" exitosamente.');
+                                                }, 2000);
+                                            }
+                                        })
+                                    }
+                                });
+
+                                $('#botonModal1').click(() => {
+                                    $('#tabla_pacientes').DataTable().clear();
+                                    $('#tabla_pacientes').DataTable().destroy();
+                                    $.ajax({
+                                        url: '/turnos/pacientes',
+                                        success: (pacientes) => {
+                                            cargarPacientes(pacientes);
+
+                                        }
+                                    });
+
+                                    $('#pacienteModal').modal('show');
+                                });
+
+                                $('#botonModal2').click(() => {
+                                    limpiarFormularioPaciente();
+
+                                    $.ajax({
+                                        url: '/pacientes/obrassociales',
+                                        success: (obrassociales) => {
+                                            $('#obrasSocialesGroup').select2({
+                                                placeholder: 'Seleccionar obras Sociales...',
+                                                theme: 'bootstrap4',
+                                                dropdownParent: $('#pacienteAgregarModal')
+                                            });
+                                            let select = $('#obrasSocialesGroup');
+                                            obrassociales.forEach(obraSocial => {
+                                                select.append(`                                
+                                    <option value=${obraSocial.idObraS}>${obraSocial.nombreObraS}</option>
+                                `)
+                                            })
+                                        }
+                                    });
+                                    $('#pacienteAgregarModal').modal('show', () => {
+                                        $('#apellido').trigger('focus');
+
+                                    });
+                                });
+
+                                $('#btnAgregarPaciente').click(() => {
+                                    var pacienteAgregar;
+                                    var seguir = validarEntradas();
+                                    if (seguir) {
+                                        pacienteAgregar = {
+                                            apellido: $('#apellido').val(),
+                                            nombre: $('#nombre').val(),
+                                            dni: $('#dni').val(),
+                                            fNac: $('#fNac').val(),
+                                            direccion: $('#direccion').val(),
+                                            telefono: $('#telefono').val(),
+                                            email: $('#email').val(),
+                                            nroAfil: $('#nroAfil').val(),
+                                            obrasSociales: $('#obrasSocialesGroup').select2().val()
+
+                                        };
+
+                                        $.ajax({
+                                            type: 'post',
+                                            url: '/turnos/pacientes',
+                                            data: pacienteAgregar,
+                                            success: (resul) => {
+                                                if (resul) {
+                                                    $('#pacienteAgregarModal').modal('toggle');
+                                                    $('#pacienteModal').modal('toggle');
+                                                    limpiarFormularioPaciente();
+                                                    $('#pacienteModal').modal('show');
+                                                }
+
+                                            }
+                                        })
+                                    }
+
+                                });
+
+
+
+
+                            });
+                        </script>
+                        <script>
+                            function armarEvents(doctorSeleccionado, grupoEventos) {
+                                $.ajax({
+                                    url: '/turnos/eventos/' + doctorSeleccionado,
+                                    success: (eventos) => {
+                                        var i = 0;
+                                        var color;
+
+                                        eventos.forEach(evento => {
+                                            if (evento.atendido == 0) {
+                                                color = '#2E9AFE';
+                                            } else if (evento.atendido == 1) {
+                                                color = '#04B404';
+                                            } else if (evento.atendido == 2) {
+                                                color = '#FFFF00';
+                                            } else if (evento.atendido == 3) {
+                                                color = '#FE2E2E'
+                                            }
+                                            grupoEventos[i] =
+
+                                                {
+                                                    'idTurno': evento.idTurno,
+                                                    'title': evento.apellidoPaciente + " " + evento.nombrePaciente,
+                                                    'start': evento.start,
+                                                    'idPaciente': evento.id,
+                                                    'idDoctor': evento.idDoctor,
+                                                    'idObraSocial': evento.idObraS,
+                                                    'valorConsulta': evento.valorConsulta,
+                                                    'atendido': evento.atendido,
+                                                    'idBanco': evento.idBanco,
+                                                    'idModalidad': evento.idModalidad,
+                                                    'color': color
+                                                }
+                                            i++;
+                                        });
+                                    }
+                                })
+                            };
+
+                            function seleccionar(idPaciente) {
+                                $('#bancoGroup').hide();
+                                $('#payment').hide();
+                                $.ajax({
+                                    url: '/turnos/paciente/' + idPaciente,
+                                    success: (paciente) => {
+                                        $('#pacienteElegido').val(paciente[0].apellidoPaciente + " " + paciente[0].nombrePaciente);
+                                        $('#idPacienteElegido').val(idPaciente);
+                                    }
+                                });
+                                var select = $('#obraSSelect');
+                                select.empty();
+                                datos = {
+                                    idPacienteS: idPaciente,
+                                    idDoctor: $('#doctoresselect option:selected').val(),
+                                }
+                                $.ajax({
+                                    type: 'post',
+                                    data: datos,
+                                    url: '/turnos/obrasspd',
+                                    success: (obrass) => {
+                                        if (obrass.length > 0) {
+                                            obrass.forEach(obraSocial => {
+                                                if (obraSocial.inhabilitada == 0) {
+                                                    select.append(`                                
+                                    <option value=${obraSocial.idObraS}>${obraSocial.nombreObraS}</option>
+                                `)
+                                                }
+
+                                            });
+
+
+                                            if ((select).val() != null) {
+                                                $('#obraSsi').show();
+                                                $('#obraSno').hide();
+                                            };
+
+                                            if ($('#obraSSelect option:selected').text() == 'Particular') {
+
+                                                $('#obraSsi').hide();
+                                                $('#obraSno').show();
+                                            };
+
+
+                                        }
+                                        if (obrass.length <= 0 || select.val() == null || select.val() == 13) {
+                                            $('#obraSsi').hide();
+                                            $('#obraSno').show();
+                                            $('#payment').hide();
+                                            var mod = $('#metodologia');
+                                            var ban = $('#banco');
+                                            mod.empty();
+
+
+                                            $.ajax({
+                                                url: '/turnos/modalidades',
+                                                success: (modalidades) => {
+                                                    modalidades.forEach(modalidad => {
+                                                        if (modalidad.activa != 1 && modalidad.nombreModalidad != 'Obra Social') {
+                                                            mod.append(`
+                                            <option value=${modalidad.idModalidad}>${modalidad.nombreModalidad}</option>
+                                        `)
+                                                        }
+                                                    });
+
+                                                    if (mod.change(() => {
+                                                            ban.empty();
+                                                            $.ajax({
+                                                                url: '/turnos/bancos',
+                                                                success: (bancos) => {
+                                                                    ban.empty();
+                                                                    bancos.forEach(banco => {
+                                                                        ban.append(`
+                                                    <option value=${banco.idBanco}>${banco.nombreBanco}</option>
+                                                `)
+                                                                    })
+
+                                                                }
+                                                            })
+                                                            if ($('#metodologia option:selected').text() != 'Efectivo') {
+                                                                $('#bancoGroup').show();
+                                                                $('#payment').show();
+                                                            };
+                                                            if ($('#metodologia option:selected').text() == 'Efectivo') {
+                                                                $('#bancoGroup').hide();
+                                                                $('#payment').hide();
+                                                            };
+                                                        }));
+                                                }
+                                            })
+                                        }
+                                    }
+                                })
+
+                                $('#pacienteModal').modal('toggle');
+                            };
+
+                            function limpiarFormulario() {
+                                $('#pacienteElegido').val("");
+                                $('#comentario').val("");
+                                $('#idPacienteElegido').val("");
+                                $('#especialidadTurno').val("");
+                                $('#obraSsi').hide();
+                                $('#obraSno').hide();
+                                $('#bancoGroup').hide();
+                                $('#owner').val("");
+                                $('#cvv').val("");
+                                $('#cardNumber').val("");
+                            }
+
+                            function limpiarFormularioPaciente() {
+                                $('#alerta').hide();
+                                $('#apellido').val(""),
+                                    $('#nombre').val(""),
+                                    $('#dni').val(""),
+                                    $('#fNac').val(""),
+                                    $('#direccion').val(""),
+                                    $('#telefono').val(""),
+                                    $('#email').val(""),
+                                    $('#nroAfil').val(""),
+                                    $('#obrasSocialesGroup').select2().val("")
+                            };
+
+                            function validarEntradas() {
+                                var seguir = false;
+                                if ($('#apellido').val() == "") {
+                                    $('#apellido').addClass('alert alert-danger border border-danger');
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#apellido').removeClass('alert alert-danger border border-danger');
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+                                if ($('#nombre').val() == "") {
+                                    $('#nombre').addClass('alert alert-danger border border-danger');
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#nombre').removeClass('alert alert-danger border border-danger');
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+                                if ($('#dni').val() == "") {
+                                    $('#dni').addClass('alert alert-danger border border-danger');
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#dni').removeClass('alert alert-danger border border-danger');
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+                                if ($('#fNac').val() == "") {
+                                    $('#fNac').addClass('alert alert-danger border border-danger');
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#fNac').removeClass('alert alert-danger border border-danger');
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+                                if ($('#direccion').val() == "") {
+                                    $('#direccion').addClass('alert alert-danger border border-danger');
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#direccion').removeClass('alert alert-danger border border-danger');
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+                                if ($('#telefono').val() == "") {
+                                    $('#telefono').addClass('alert alert-danger border border-danger');
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#telefono').removeClass('alert alert-danger border border-danger');
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+                                if ($('#email').val() == "") {
+                                    $('#email').addClass('alert alert-danger border border-danger');
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#email').removeClass('alert alert-danger border border-danger');
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+                                if ($('#nroAfil').val() == "") {
+                                    $('#nroAfil').addClass('alert alert-danger border border-danger');
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#nroAfil').removeClass('alert alert-danger border border-danger');
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+                                if ($('#obrasSocialesGroup').select2().val().length == 0) {
+                                    $('#obrasSocialesGroup').select2({
+                                        theme: 'bootstrap4',
+                                        placeholder: 'Seleccionar obras Sociales...'
+                                    });
+                                    $('#alerta').show();
+                                    seguir = false;
+                                } else {
+                                    $('#obrasSocialesGroup').select2({
+                                        theme: 'bootstrap4',
+                                        placeholder: 'Seleccionar obras Sociales...'
+                                    });
+                                    $('#alerta').hide();
+                                    seguir = true;
+                                }
+
+                                return seguir;
+                            }
+                        </script>
+
+                        <script>
+                            function cargarPacientes(pacientes) {
+                                var body = $('#tbody');
+                                var i = 1;
+                                var aux;
+                                pacientes.forEach(paciente => {
+                                    if (i == 1 || aux.id != paciente.id) {
+                                        body.append(`
+                        <tr>
+                            <td>
+                                ${i}
+                            </td>
+                            <td>
+                                ${paciente.apellidoPaciente}
+                            </td>
+                            <td>
+                                ${paciente.nombrePaciente}
+                            </td>
+                            <td>
+                                ${paciente.dniPaciente}
+                            </td>
+                            <td>
+                                ${paciente.nombreObraS}
+                            </td>
+                            <td>
+                                ${paciente.telefonoPaciente}
+                            </td>
+                            <td>
+                                
+
+                                <button class="btn btn-success btn-sm" onclick="seleccionar(${paciente.id})">
+                                    <i class="fas fa-check-square"></i>
+                                </button>
+                                
+                                        
+                            </td>                         
+                                
+                        </tr>
+                    `);
+                                        aux = paciente;
+                                    }
+
+                                    i++;
+                                });
+                                $('#tabla_pacientes').DataTable({
+                                    "language": {
+                                        "lengthMenu": "Mostrar _MENU_ Registros por página",
+                                        "zeroRecords": "No se encontraron resultados en su búsqueda.",
+                                        "searchPlaceholder": "Buscar Paciente",
+                                        "info": "Mostrando registros del _START_ al _END_ de un total de _MAX_",
+                                        "infoEmpty": "No existen registros.",
+                                        "infoFiltered": "(Filtrado de un total de _MAX_ registros",
+                                        "search": "Buscar:",
+                                        "paginate": {
+                                            "fist": "Primero",
+                                            "last": "Último",
+                                            "next": "Siguiente",
+                                            "previous": "Anterior"
+                                        }
+                                    },
+
+                                    dom: 'Bfrtip',
+                                    select: false,
+                                    pageLength: 4
+
+                                });
+
+
+                            }
+                        </script>
+
+                        <script src="/js/abrirMenu.js"></script>
+    </body>
+
+    </html>

@@ -4,7 +4,7 @@ module.exports = {
         if (req.isAuthenticated()) {
             next();
         } else {
-            res.redirect('http://localhost:3000/auth/signin');
+            res.redirect('auth/signin');
         }
     }
 }

@@ -17,7 +17,7 @@
         "ejs": "^2.6.1",
         "electron-packager": "^14.0.1",
         "electron-prebuilt": "^1.4.13",
-        "express": "^4.16.3",
+        "express": "^4.17.3",
         "express-session": "^1.15.6",
         "jquery": "^3.4.1",
         "js-yaml": "^3.13.1",
